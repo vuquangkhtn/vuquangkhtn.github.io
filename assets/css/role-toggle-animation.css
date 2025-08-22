@@ -1,8 +1,14 @@
 .role-toggle {
     position: relative;
-    display: inline-block;
+    display: block;
     min-width: 200px; /* Prevent layout shift */
     transition: all 0.3s ease-in-out;
+    font-size: 56px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -.03em;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .role-toggle.fade-out {
@@ -27,5 +33,12 @@
     }
     51%, 100% {
         border-color: currentColor;
+    }
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    .role-toggle {
+        font-size: 48px;
     }
 }

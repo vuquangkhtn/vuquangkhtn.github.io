@@ -60,6 +60,7 @@
 
 .section-hero h1 {
   color: var(--warm-white) !important;
+  font-size: 36px;
 }
 
 .section-hero h4 {

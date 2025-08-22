@@ -24,7 +24,9 @@ function bundleCSS() {
   const cssFiles = [
     'assets/css/relume-timeline-cloneable.webflow.dee96ca0d.css',
     'assets/css/trending-colors-2024.css',
-    'assets/css/mobile-responsive-fixes.css'
+    'assets/css/mobile-responsive-fixes.css',
+    'assets/css/role-toggle-animation.css',
+    'assets/css/timeline-image-cards.css'
   ];
   
   let bundledCSS = '';
@@ -48,6 +50,26 @@ function bundleCSS() {
   console.log('✅ CSS bundled successfully');
 }
 
+// CSS file watching function
+function watchCSS() {
+  const cssFiles = [
+    'assets/css/relume-timeline-cloneable.webflow.dee96ca0d.css',
+    'assets/css/trending-colors-2024.css',
+    'assets/css/mobile-responsive-fixes.css',
+    'assets/css/role-toggle-animation.css',
+    'assets/css/timeline-image-cards.css'
+  ];
+  
+  cssFiles.forEach(file => {
+    if (fs.existsSync(file)) {
+      fs.watchFile(file, () => {
+        console.log(`📝 CSS file changed: ${file}`);
+        bundleCSS();
+      });
+    }
+  });
+}
+
 // Build function
 async function build() {
   try {
@@ -58,6 +80,7 @@ async function build() {
     if (isWatch) {
       const ctx = await esbuild.context(buildConfig);
       await ctx.watch();
+      watchCSS();
       console.log('👀 Watching for changes...');
     } else {
       await esbuild.build(buildConfig);
