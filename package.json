@@ -6,12 +6,20 @@
   "scripts": {
     "build": "node build.js",
     "dev": "node build.js --watch",
-    "serve": "node server.js"
+    "serve": "node server.js",
+    "serve-dev": "live-server --port=8000 --watch=dist,index.html --wait=500 --no-browser",
+    "start": "npm run dev & npm run serve-dev"
   },
   "devDependencies": {
-    "esbuild": "^0.19.0"
+    "esbuild": "^0.19.0",
+    "live-server": "^1.2.2"
   },
-  "keywords": ["portfolio", "timeline", "javascript", "css"],
+  "keywords": [
+    "portfolio",
+    "timeline",
+    "javascript",
+    "css"
+  ],
   "author": "Quang Vu Nguyen",
   "license": "MIT"
 }
