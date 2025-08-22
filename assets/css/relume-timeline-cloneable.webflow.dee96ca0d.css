@@ -2276,6 +2276,10 @@ p {
   overflow: hidden;
 }
 
+.timeline_image-wrapper a {
+  width: 100%;
+}
+
 .timeline_link {
   opacity: .6;
   color: #fff;

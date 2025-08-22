@@ -1,0 +1,266 @@
+/* Enhanced Timeline Image Cards */
+.timeline_image-wrapper a {
+    text-decoration: none;
+}
+
+.timeline-image-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 240px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.card-visual {
+    height: 120px;
+    background: linear-gradient(135deg, #1f2937, #374151);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-visual-content {
+    text-align: center;
+    color: white;
+    z-index: 2;
+}
+
+.card-visual-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card-visual-subtitle {
+    font-size: 12px;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+.card-visual-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.card-content {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-content {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.timeline-image-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.company-logo, .project-logo {
+    flex-shrink: 0;
+}
+
+.company-info, .project-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.company-info h4, .project-info h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    line-height: 1.2;
+}
+
+.reputation-badge {
+    display: inline-block;
+    background: #f3f4f6;
+    color: #374151;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+    margin-top: 0;
+}
+
+.reputation-badge.unicorn {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #92400e;
+}
+
+.reputation-badge.agile {
+    background: linear-gradient(135deg, #10b981, #34d399);
+    color: white;
+}
+
+.reputation-badge.big-four {
+    background: linear-gradient(135deg, #1f2937, #374151);
+    color: white;
+}
+
+.reputation-badge.innovation {
+    background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+    color: white;
+}
+
+.card-metrics {
+    display: flex;
+    gap: 12px;
+}
+
+.metric {
+    flex: 1;
+    text-align: center;
+}
+
+.metric-value {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.2;
+}
+
+.metric-label {
+    display: block;
+    font-size: 10px;
+    color: #6b7280;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+/* Company-specific visual themes */
+.education-card .card-visual {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+}
+
+.vng-card .card-visual {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+}
+
+.kms-card .card-visual {
+    background: linear-gradient(135deg, #059669, #10b981);
+}
+
+.codelink-card .card-visual {
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+}
+
+.nab-card .card-visual {
+    background: linear-gradient(135deg, #1f2937, #374151);
+}
+
+.ai-project-card .card-visual {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+/* Mobile Responsive Enhancements */
+@media (max-width: 768px) {
+    .timeline-image-card {
+        height: auto;
+        min-height: 220px;
+    }
+    
+    .card-visual {
+        height: 100px;
+    }
+    
+    .card-visual-title {
+        font-size: 16px;
+    }
+    
+    .card-visual-subtitle {
+        font-size: 11px;
+    }
+    
+    .card-visual-icon {
+        font-size: 50px;
+    }
+    
+    .card-content {
+        padding: 12px;
+    }
+    
+    .card-header {
+        margin-bottom: 8px;
+    }
+    
+    .company-logo, .project-logo {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .company-info h4, .project-info h4 {
+        font-size: 13px;
+    }
+    
+    .reputation-badge {
+        font-size: 9px;
+        padding: 2px 5px;
+    }
+    
+    .metric-value {
+        font-size: 11px;
+    }
+    
+    .metric-label {
+        font-size: 9px;
+    }
+    
+    .card-metrics {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .timeline-image-card {
+        padding: 12px;
+        min-height: 140px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .company-logo, .project-logo {
+                align-self: center;
+            }
+
+            .company-info, .project-info {
+        text-align: center;
+        width: 100%;
+    }
+}
