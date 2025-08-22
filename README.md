@@ -20,12 +20,30 @@
 • Integrated feature flagging tool (LaunchDarkly) for A/B testing and feature rollouts
 • Enhanced security posture through SAST, SCA implementations using Snyk and SonarQube
 
-### Front-end Software Engineer | Codelink & KMS & VNG
-**Aug 2017 - Aug 2022**
+### Front-end Software Engineer | Codelink
+**Oct 2019 - Aug 2022**
 
-• Built optimized UI components with React, NextJS, and TypeScript for enterprise applications  
-• Achieved 90%+ test coverage through comprehensive unit and integration testing strategies  
-• Developed full-stack solutions using NodeJS, ElasticSearch, and Socket.io for real-time features
+• Built enterprise applications with advanced optimization and testing strategies
+• Media Management: Enterprise platform with ReactJS, ElasticSearch, and Nuxeo
+• Medical Service Web App: Healthcare platform with 90%+ test coverage
+• Stock Exchange: Cryptocurrency trading platform with Socket.io real-time features
+• Directly communicated with international clients and tech leads in English
+
+### Front-end Software Engineer | KMS Technology
+**Oct 2018 - Aug 2019**
+
+• Developed e-commerce and management applications with React and Angular
+• Ticket E-commerce: Event ticket exchange platform with React and Redux
+• ERTPM Tool: Agile process management website with micro frontend architecture
+• Mastered Redux middlewares and shared state management between platforms
+
+### Software Engineer | VNG Education
+**Jul 2017 - Jul 2018**
+
+• Built mobile applications using React Native and developed live streaming solutions
+• Company Media: Social networking application with React Native
+• TalkTV: Live stream application with advanced donating and chatting features
+• Learned React component lifecycle and mobile development fundamentals
 
 ---
 
