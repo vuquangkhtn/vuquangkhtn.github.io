@@ -286,11 +286,45 @@
   }
 }
 
+/* My Information Section */
+.section-my-info {
+  background: var(--ocean-blue) !important;
+}
+
+.section-my-info h2 {
+  color: var(--warm-white) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%) !important;
+}
+
+.info-card a:hover {
+  color: var(--golden-yellow) !important;
+}
+
+/* Responsive adjustments for info cards */
+@media (max-width: 768px) {
+  .info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .info-card {
+    padding: 1rem !important;
+  }
+}
+
 /* Accessibility improvements */
 .timeline_link:focus,
 .button-icon-small:focus,
 .button-icon-small-secondary:focus,
-.button-inverted:focus {
+.button-inverted:focus,
+.info-card a:focus {
   outline: 3px solid var(--golden-yellow);
   outline-offset: 2px;
 }
@@ -302,7 +336,7 @@
   white-space: nowrap;
   margin: 0 auto;
   letter-spacing: 0.1em;
-  animation: typing 3s steps(12, end), blink-caret 0.75s step-end infinite;
+  animation: typing 1s steps(12, end), blink-caret 0.75s step-end infinite;
 }
 
 @keyframes typing {
