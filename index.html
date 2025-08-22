@@ -559,22 +559,6 @@
             }
         }
         
-        document.addEventListener('DOMContentLoaded', function() {
-            const contactBtn = document.getElementById('contact-btn');
-            const closeContactBtn = document.getElementById('close-contact-btn');
-            const contactSection = document.getElementById('contact-section');
-            
-            // Show contact section
-            contactBtn.addEventListener('click', function() {
-                contactSection.style.display = 'block';
-                contactSection.scrollIntoView({ behavior: 'smooth' });
-            });
-            
-            // Hide contact section
-            closeContactBtn.addEventListener('click', function() {
-                contactSection.style.display = 'none';
-            });
-        });
     </script>
     <script src="./assets/js/role-toggle.js"></script>
 </body>
