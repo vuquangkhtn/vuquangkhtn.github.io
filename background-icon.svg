@@ -1,0 +1,16 @@
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+      <feOffset dx="0" dy="0" result="offset"/>
+    </filter>
+  </defs>
+  <!-- Modern W character with blur effect -->
+  <path d="M3 4 L5 12 L6.5 7 L8 12 L9.5 7 L11 12 L13 4" 
+        stroke="rgba(255, 255, 255, 0.6)" 
+        stroke-width="1.5" 
+        fill="none" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#blur)"/>
+</svg>

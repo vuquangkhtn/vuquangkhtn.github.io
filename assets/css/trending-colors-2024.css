@@ -31,50 +31,31 @@
 
 /* Override existing background and color styles */
 .background-layer {
-  background: #0f172a !important;
-  background-image: none !important;
-  position: relative;
+  z-index: 0;
+  background: linear-gradient(135deg, var(--ocean-blue) 0%, var(--navy-blue) 30%, var(--steel-blue) 60%, var(--midnight-blue) 100%) !important;
+  background-image: url('../../background-icon.svg'), 
+                   radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.2) 0%, transparent 50%),
+                   radial-gradient(circle at 75% 75%, rgba(74, 144, 226, 0.3) 0%, transparent 60%) !important;
+  background-position: center center, 25% 25%, 75% 75% !important;
+  background-repeat: no-repeat, no-repeat, no-repeat !important;
+  background-size: 180px 180px, 100% 100%, 100% 100% !important;
+  background-attachment: fixed !important;
+  position: absolute;
+  inset: 0%;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
 }
 
-.background-layer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 25% 25%, #1e293b 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, #334155 0%, transparent 50%),
-    linear-gradient(90deg, transparent 0%, rgba(100, 116, 139, 0.1) 1px, transparent 1px),
-    linear-gradient(0deg, transparent 0%, rgba(100, 116, 139, 0.1) 1px, transparent 1px);
-  background-size: 200px 200px, 300px 300px, 40px 40px, 40px 40px;
-  background-position: 0 0, 100px 100px, 0 0, 0 0;
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.background-layer::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 2px,
-      rgba(148, 163, 184, 0.03) 2px,
-      rgba(148, 163, 184, 0.03) 4px
-    );
-  pointer-events: none;
-}
+/* Removed pseudo-elements - background now integrated directly */
 
 /* Hero section styling */
 .section-hero {
   background: var(--gradient-hero);
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
 .section-hero h1 {
