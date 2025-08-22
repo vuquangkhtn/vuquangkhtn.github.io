@@ -1,0 +1,354 @@
+/* Trending Colors 2024-2025 Theme */
+/* Based on Pantone Color of the Year and trending web design palettes */
+
+:root {
+  /* Primary blue trending colors */
+  --ocean-blue: #0077BE;           /* Deep ocean blue - main theme */
+  --sky-blue: #4A90E2;             /* Bright sky blue */
+  --navy-blue: #1E3A8A;            /* Deep navy blue */
+  --powder-blue: #B3D9FF;          /* Light powder blue */
+  --steel-blue: #4682B4;           /* Steel blue accent */
+  --midnight-blue: #191970;        /* Midnight blue for depth */
+  --ice-blue: #E6F3FF;             /* Very light ice blue */
+  
+  /* Complementary colors */
+  --coral-accent: #FF6B6B;         /* Coral for contrast */
+  --golden-yellow: #FFD700;        /* Golden yellow accent */
+  --mint-green: #98FB98;           /* Soft mint green */
+  
+  /* Neutral colors */
+  --warm-white: #FEFEFE;           /* Crisp white */
+  --light-gray: #F5F7FA;           /* Light blue-gray background */
+  --blue-gray: #64748B;            /* Blue-tinted gray */
+  --charcoal: #1F2937;             /* Deep charcoal for text */
+  
+  /* Blue gradient combinations */
+  --gradient-primary: linear-gradient(135deg, var(--ocean-blue) 0%, var(--sky-blue) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--navy-blue) 0%, var(--steel-blue) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--sky-blue) 0%, var(--powder-blue) 100%);
+  --gradient-hero: var(--ocean-blue);
+}
+
+/* Override existing background and color styles */
+.background-layer {
+  background: #0f172a !important;
+  background-image: none !important;
+  position: relative;
+}
+
+.background-layer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, #1e293b 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, #334155 0%, transparent 50%),
+    linear-gradient(90deg, transparent 0%, rgba(100, 116, 139, 0.1) 1px, transparent 1px),
+    linear-gradient(0deg, transparent 0%, rgba(100, 116, 139, 0.1) 1px, transparent 1px);
+  background-size: 200px 200px, 300px 300px, 40px 40px, 40px 40px;
+  background-position: 0 0, 100px 100px, 0 0, 0 0;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.background-layer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(148, 163, 184, 0.03) 2px,
+      rgba(148, 163, 184, 0.03) 4px
+    );
+  pointer-events: none;
+}
+
+/* Hero section styling */
+.section-hero {
+  background: var(--gradient-hero);
+}
+
+.section-hero h1 {
+  color: var(--warm-white) !important;
+}
+
+.section-hero h4 {
+  color: var(--warm-white) !important;
+}
+
+.section-hero p {
+  color: var(--warm-white) !important;
+}
+
+/* Navigation styling */
+.hero-nav h3 {
+  color: var(--warm-white) !important;
+}
+
+.button-icon-small-secondary {
+  background: var(--gradient-primary) !important;
+  color: var(--warm-white) !important;
+  border: 2px solid var(--ocean-blue) !important;
+}
+
+.button-icon-small {
+  background: var(--steel-blue) !important;
+  color: var(--warm-white) !important;
+  border: 2px solid var(--steel-blue) !important;
+}
+
+/* Timeline section */
+.section-timeline {
+  background: var(--light-gray) !important;
+}
+
+.timeline_progress-bar {
+  background: var(--gradient-primary) !important;
+}
+
+.timeline_circle {
+  background-color: var(--navy-blue) !important;
+  border: 3px solid var(--steel-blue) !important;
+  box-shadow: 0 0 15px rgba(25, 25, 46, 0.8) !important;
+  transform: scale(1);
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  will-change: background-color, border-color, box-shadow, transform;
+}
+
+.timeline_circle:hover {
+  background-color: var(--golden-yellow) !important;
+  border: 3px solid var(--sky-blue) !important;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 0 50px rgba(74, 144, 226, 0.6) !important;
+  transform: scale(1.15);
+}
+
+.timeline_date-text {
+  color: var(--charcoal) !important;
+  font-weight: 600;
+}
+
+.timeline_text {
+  color: var(--charcoal) !important;
+}
+
+.text-colour-lightgrey {
+  color: var(--charcoal) !important;
+}
+
+/* Timeline milestone badge */
+.timeline_milestone-badge {
+  background: var(--gradient-secondary) !important;
+  color: var(--warm-white) !important;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* Timeline images with blue gradients */
+.timeline_item:nth-child(1) .timeline_image-wrapper > div {
+  background: var(--gradient-primary) !important;
+}
+
+.timeline_item:nth-child(2) .timeline_image-wrapper > div {
+  background: var(--gradient-secondary) !important;
+}
+
+.timeline_item:nth-child(3) .timeline_image-wrapper > div {
+  background: var(--gradient-accent) !important;
+}
+
+.timeline_item:nth-child(4) .timeline_image-wrapper > div {
+  background: linear-gradient(135deg, var(--sky-blue) 0%, var(--golden-yellow) 100%) !important;
+}
+
+/* Timeline link styling */
+.timeline_link {
+  background: var(--steel-blue) !important;
+  color: var(--warm-white) !important;
+  padding: 12px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.timeline_link:hover {
+  background: var(--coral-accent) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 119, 190, 0.3);
+}
+
+/* Section headings */
+.section-timeline-heading {
+  background: var(--warm-white) !important;
+}
+
+.section-timeline-heading h2 {
+  color: var(--charcoal) !important;
+}
+
+.section-timeline-heading p {
+  color: var(--charcoal) !important;
+}
+
+/* CTA section */
+.section-timeline-cta {
+  background: var(--gradient-primary) !important;
+}
+
+.section-timeline-cta .timeline_text {
+  color: var(--warm-white) !important;
+}
+
+.section-timeline-cta .timeline_date-text {
+  color: var(--powder-blue) !important;
+}
+
+.section-timeline-cta p {
+  color: var(--ice-blue) !important;
+}
+
+.button-inverted {
+  background: var(--warm-white) !important;
+  color: var(--ocean-blue) !important;
+  border: 2px solid var(--warm-white) !important;
+  font-weight: 600;
+}
+
+.button-inverted:hover {
+  background: var(--powder-blue) !important;
+  color: var(--charcoal) !important;
+}
+
+/* Footer section */
+.section-footer {
+  background: var(--charcoal) !important;
+}
+
+.section-footer h2 {
+  color: var(--warm-white) !important;
+}
+
+.section-footer h4 {
+  color: var(--sky-blue) !important;
+}
+
+.section-footer p {
+  color: var(--warm-white) !important;
+}
+
+.section-footer .button-icon-small {
+  background: var(--steel-blue) !important;
+  color: var(--warm-white) !important;
+}
+
+.section-footer .button-icon-small-secondary {
+  background: transparent !important;
+  color: var(--sky-blue) !important;
+  border: 2px solid var(--sky-blue) !important;
+}
+
+/* Text underline accent */
+.text-underline {
+  background-image: linear-gradient(var(--golden-yellow), var(--golden-yellow)) !important;
+  background-position: 0 100% !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 3px !important;
+  padding-bottom: 2px;
+}
+
+/* Hover effects and animations */
+.timeline_item:hover .timeline_circle {
+  background: var(--steel-blue) !important;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .timeline_image-wrapper > div {
+    height: 150px !important;
+    font-size: 18px !important;
+  }
+  
+  .timeline_milestone-badge {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Accessibility improvements */
+.timeline_link:focus,
+.button-icon-small:focus,
+.button-icon-small-secondary:focus,
+.button-inverted:focus {
+  outline: 3px solid var(--golden-yellow);
+  outline-offset: 2px;
+}
+
+/* Typing effect animation */
+.typing-effect {
+  overflow: hidden;
+  border-right: 3px solid var(--ocean-blue);
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 0.1em;
+  animation: typing 3s steps(12, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: var(--ocean-blue); }
+}
+
+/* Scroll-triggered animations */
+.timeline_right {
+  opacity: 0.25;
+  transition: opacity 0.8s ease-out;
+}
+
+.timeline_right.in-view {
+  opacity: 1;
+}
+
+/* Subtle animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline_item {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.timeline_item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.timeline_item:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.timeline_item:nth-child(4) {
+  animation-delay: 0.3s;
+}
