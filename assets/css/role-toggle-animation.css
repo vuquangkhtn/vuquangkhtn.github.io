@@ -1,0 +1,31 @@
+.role-toggle {
+    position: relative;
+    display: inline-block;
+    min-width: 200px; /* Prevent layout shift */
+    transition: all 0.3s ease-in-out;
+}
+
+.role-toggle.fade-out {
+    opacity: 0;
+    transform: translateY(-5px);
+}
+
+.role-toggle.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Typing effect for role changes */
+.role-toggle.typing {
+    border-right: 2px solid;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% {
+        border-color: transparent;
+    }
+    51%, 100% {
+        border-color: currentColor;
+    }
+}
