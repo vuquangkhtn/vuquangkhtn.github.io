@@ -1,5 +1,5 @@
 # QUANG VU NGUYEN
-**Senior Software Engineer | Frontend Specialist**
+**Senior Software Engineer**
 
 📧 vuquangkhtn@gmail.com | 📱 +84387708009 | 🌍 Ho Chi Minh City, Vietnam  
 🌐 [Portfolio](https://vuquangkhtn.github.io) | 💼 [LinkedIn](https://www.linkedin.com/in/ngvuquang) | 🐙 [GitHub](https://github.com/vuquangkhtn/)
@@ -7,7 +7,7 @@
 ---
 
 ## PROFESSIONAL SUMMARY
-Senior Software Engineer with 6+ years of expertise in React ecosystem and micro-frontend architecture. Currently driving innovation at NAB Innovation Centre with proven track record of 90% performance optimizations and leading technical migrations across 150+ applications.
+Senior Software Engineer with 6+ years of expertise in React ecosystem and micro-frontend architecture. Currently driving innovation at NAB Innovation Centre by leading technical migrations across 150+ applications and building automated miniapp generator with standardized templates.
 
 ---
 
@@ -26,7 +26,7 @@ Senior Software Engineer with 6+ years of expertise in React ecosystem and micro
 ### **Front-End Software Engineer** | Codelink
 *August 2019 - August 2022 | Ho Chi Minh City, Vietnam*
 
-• Implemented TDD strategies and comprehensive unit testing to deliver enterprise applications with 90%+ test coverage
+• Implemented Test Driven Development strategies and comprehensive unit testing to deliver enterprise applications with 90%+ test coverage
 • Integrated Socket.io for live data streaming, significantly improving trading platform responsiveness
 
 ### **Front-End Software Engineer** | KMS Technology & VNG Corporation
@@ -37,7 +37,7 @@ Senior Software Engineer with 6+ years of expertise in React ecosystem and micro
 
 ---
 
-## PROJECTS
+## HIGHLIGHTED PROJECT
 
 ### **AI Code Review Assistant** | VS Code Extension
 *Personal Project | 2024*
