@@ -34,6 +34,7 @@ Experienced Software Engineer with 6+ years of expertise in frontend development
 - **Worked extensively with monorepo and micro-frontend architecture**, enabling scalable team collaboration
 - **Enhanced Jest Configuration** for optimal testing performance across multiple projects
 - **Collaborated with cross-functional teams** to provide architectural solutions and technical consultation
+- **Proactively identified and remediated security vulnerabilities** through comprehensive SCA (Software Composition Analysis) and SAST (Static Application Security Testing) implementation, ensuring robust application security compliance
 - **Mentored cross-functional teams on architecture best practices**, enhancing overall team performance and technical standards
 
 **🔧 Technical Environment:**

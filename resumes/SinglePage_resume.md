@@ -7,7 +7,7 @@
 ---
 
 ## PROFESSIONAL SUMMARY
-Senior Software Engineer with 6+ years of expertise in React ecosystem and micro-frontend architecture. Currently driving innovation at NAB Innovation Centre by leading technical migrations across 150+ applications and building automated miniapp generator with standardized templates.
+Senior Software Engineer with 6+ years of expertise in Javascript/Typescript. Currently driving innovation at NAB by leading technical migrations and driving the adoption of micro-frontend architecture across 150+ applications.
 
 ---
 
@@ -16,12 +16,13 @@ Senior Software Engineer with 6+ years of expertise in React ecosystem and micro
 ### **Senior Software Engineer** | NAB Innovation Centre
 *August 2022 - Present | Ho Chi Minh City, Vietnam*
 
-• Optimized Innersource libraries and bundling strategies, achieving 90% bundle size reduction across 150+ miniapps
-• Built automated miniapp generator with standardized templates, cutting development setup time from 7 days to 30 minutes
-• Enhanced micro-frontend infrastructure enabling miniapp development, reusability, and shared component libraries for consistent feature implementation across applications
 • Mentored cross-functional teams on architecture best practices, enhancing overall team performance and technical standards
+• Optimized Innersource libraries by 80% bundle size reduction across 150+ miniapps using Webpack bundling strategies
+• Built automated miniapp generator with standardized templates, cutting development setup time from 7 days to 30 minutes
+• Enhanced micro-frontend ecosystem enabling miniapp development, reusability, and shared component libraries for consistent feature implementation across applications
+• Proactively identified and remediated security vulnerabilities through comprehensive SCA (Software Composition Analysis) and SAST (Static Application Security Testing) implementation, ensuring robust application security compliance
 
-**Tech Stack:** React, TypeScript, Redux, Jest, React Testing Library, PostgreSQL, GraphQL, Git, Docker
+**Tech Stack:** React, TypeScript, Redux, Jest, React Testing Library, PostgreSQL, GraphQL, Git, Jenkins
 
 ### **Front-End Software Engineer** | Codelink
 *August 2019 - August 2022 | Ho Chi Minh City, Vietnam*
