@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "mode": "named",
+  "named": "pstack",
+  "steps": {
+    "plan": {
+      "set": "pstack",
+      "skills": [
+        "how",
+        "why",
+        "teach",
+        "figure-it-out",
+        "show-me-your-work"
+      ]
+    },
+    "design": {
+      "set": "pstack",
+      "skills": [
+        "architect",
+        "arena",
+        "interrogate"
+      ]
+    },
+    "build": {
+      "set": "pstack",
+      "skills": [
+        "tdd",
+        "typescript-best-practices",
+        "deslop",
+        "no-comments"
+      ]
+    },
+    "test": {
+      "set": "pstack",
+      "skills": [
+        "create-verification-skill",
+        "swarm",
+        "blast-radius",
+        "benchmark-checklist",
+        "interrogate",
+        "thermo-nuclear-code-quality-review"
+      ]
+    },
+    "deploy": {
+      "set": "pstack",
+      "skills": [
+        "make-pr-easy-to-review",
+        "babysit",
+        "fix-merge-conflicts",
+        "get-pr-comments",
+        "fix-ci"
+      ]
+    },
+    "maintain": {
+      "set": "pstack",
+      "skills": []
+    }
+  },
+  "agents": [
+    "claude",
+    "zcode"
+  ],
+  "generated_at": "2026-11-10T21:37:03",
+  "record": {
+    "version": 1,
+    "hosts": [
+      "claude",
+      "zcode"
+    ],
+    "installed_at": "2026-11-10T21:06:16"
+  },
+  "sets": {
+    "pstack": {
+      "source": "https://github.com/michael-denyer/pstack-claude",
+      "pinned_ref": "190fc9a009491cbcfc04e25ef5b3c2d1fcf5ca8a",
+      "license": "MIT (+ LICENSE-cursor-team-kit, LICENSE-thermos; see NOTICE.md, NOTICE-skills.md)",
+      "steps": {
+        "plan": [
+          "how",
+          "why",
+          "teach",
+          "figure-it-out",
+          "show-me-your-work"
+        ],
+        "design": [
+          "architect",
+          "arena",
+          "interrogate"
+        ],
+        "build": [
+          "tdd",
+          "typescript-best-practices",
+          "deslop",
+          "no-comments"
+        ],
+        "test": [
+          "create-verification-skill",
+          "swarm",
+          "blast-radius",
+          "benchmark-checklist",
+          "interrogate",
+          "thermo-nuclear-code-quality-review"
+        ],
+        "deploy": [
+          "make-pr-easy-to-review",
+          "babysit",
+          "fix-merge-conflicts",
+          "get-pr-comments",
+          "fix-ci"
+        ],
+        "maintain": []
+      },
+      "anytime": [
+        "poteto-mode",
+        "setup-pstack",
+        "poteto-help",
+        "recall",
+        "ketchup",
+        "ketchup-video",
+        "bro",
+        "what-did-i-get-done",
+        "in-your-own-words",
+        "technical-writing",
+        "unslop",
+        "sharpen",
+        "statechart",
+        "thermos",
+        "thermo-nuclear-review",
+        "reflect",
+        "correct",
+        "automate-me",
+        "maintain-verification-skill",
+        "create-formal-verification-skill",
+        "maintain-formal-verification-skill",
+        "principle-attack-the-premise",
+        "principle-boundary-discipline",
+        "principle-build-the-lever",
+        "principle-encode-lessons-in-structure",
+        "principle-exhaust-the-design-space",
+        "principle-experience-first",
+        "principle-explain-the-number",
+        "principle-fix-root-causes",
+        "principle-foundational-thinking",
+        "principle-guard-the-context-window",
+        "principle-laziness-protocol",
+        "principle-make-operations-idempotent",
+        "principle-migrate-callers-then-delete-legacy-apis",
+        "principle-minimize-reader-load",
+        "principle-model-the-domain",
+        "principle-never-block-on-the-human",
+        "principle-outcome-oriented-execution",
+        "principle-prove-it-works",
+        "principle-redesign-from-first-principles",
+        "principle-separate-before-serializing-shared-state",
+        "principle-sequence-verifiable-units",
+        "principle-subtract-before-you-add",
+        "principle-test-behavior-not-implementation",
+        "principle-type-system-discipline"
+      ],
+      "maintain_fallback": "pstack has no Maintain skills; super-board's own loop (super-collect, calibration) covers it."
+    }
+  }
+}

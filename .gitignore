@@ -38,3 +38,17 @@ coverage/
 # Temporary folders
 tmp/
 temp/
+# super-board (machine-local state only — configs/ stays committed)
+.claude/super-board/active
+.claude/super-board/onboard-answers.json
+.claude/super-board/onboard-staged/
+.claude/super-board/backup/
+.claude/super-board/inflight/
+.claude/super-board/migrations/
+.claude/super-board/upgrade.json
+
+# personal notes — stay local, never publish
+questions.md
+
+# editor backups
+.claude/settings.json.bak-*

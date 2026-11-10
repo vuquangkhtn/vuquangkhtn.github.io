@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "updated": "2026-11-10T21:34:13",
+  "last_step": "collect",
+  "answers": {
+    "skill_sets": {
+      "mode": "named",
+      "named": "pstack"
+    },
+    "agents": [
+      "claude",
+      "zcode"
+    ],
+    "other_agents": "",
+    "github": {
+      "login": "vuquangkhtn",
+      "remote": "github.com/vuquangkhtn/vuquangkhtn.github.io"
+    },
+    "second_account": "yes",
+    "collect": [
+      "github"
+    ]
+  }
+}
