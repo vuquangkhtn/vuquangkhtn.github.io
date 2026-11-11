@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P1 STUB — The Journeyman's Folio (rough, for reaction)</title>
+<style>
+/* ============ ROUGH PROTOTYPE — decisions staged as marginalia, not final copy ============ */
+:root{
+  --settle:cubic-bezier(.16,.84,.24,1);
+  --spring:cubic-bezier(.3,1.5,.45,1);
+  --draft-paper:#F4F1E8; --draft-ink:#1B4F9C; --draft-shade:#0E2F66; --pencil:#FFD23F;
+  --linen:#EFE7D6; --iron:#2A2A2A; --madder:#A8452C; --weld:#D9A441;
+  --grid-paper:#F6F1EA; --grid-card:#FDFBF7; --navy:#2B2D42; --energy:#FFD166;
+  --board:#060605; --cream:#F2EFE4; --signal:#F5C400; --alarm:#D4401F;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--draft-paper);color:var(--iron);font:16px/1.5 Georgia,serif}
+.mono{font-family:Menlo,Consolas,monospace}
+.kicker{font:700 10.5px/1 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.18em;text-transform:uppercase}
+.note{position:absolute;right:12px;top:12px;max-width:230px;background:#fffbe6;border:1.5px dashed #b8a300;
+  padding:8px 10px;font:11px/1.45 Menlo,Consolas,monospace;color:#6b5d00;transform:rotate(1.2deg);z-index:5}
+.note b{display:block;margin-bottom:2px}
+section{position:relative;padding:72px 24px}
+.spine{position:absolute;left:38px;top:0;bottom:0;width:2px;background:currentColor;opacity:.35}
+.stop{position:absolute;left:31px;width:16px;height:16px;border-radius:50%;border:3px solid currentColor;background:var(--draft-paper)}
+h1{font:700 clamp(40px,7vw,72px)/1 Georgia,serif;letter-spacing:-.03em;color:var(--draft-ink)}
+h2{font:700 28px/1.15 Georgia,serif;letter-spacing:-.02em;margin-bottom:6px}
+.rule2{border-top:3px double var(--iron);margin:14px 0 22px}
+.sheetlabel{display:inline-block;border:2px solid currentColor;padding:6px 12px;margin-bottom:18px}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.rise{animation:rise .8s var(--settle) both;animation-delay:calc(var(--i,0)*80ms)}
+
+/* ---- Overture: light drafting cover ---- */
+.overture{background:var(--draft-paper);color:var(--draft-ink)}
+.titleblock{border:2px solid var(--draft-ink);max-width:720px;padding:34px 38px;position:relative}
+.titleblock::before{content:"";position:absolute;inset:6px;border:1px solid var(--draft-ink);opacity:.35;pointer-events:none}
+.zone{position:absolute;top:-1px;right:-1px;display:grid;grid-template-columns:repeat(8,14px);grid-auto-rows:14px}
+.zone i{border-left:1px solid var(--draft-ink);border-bottom:1px solid var(--draft-ink);opacity:.3}
+.dim{display:inline-flex;align-items:center;gap:10px;color:var(--draft-shade)}
+.dim::before,.dim::after{content:"";flex:1;height:1px;background:var(--draft-ink)}
+.role{margin:10px 0 4px;color:var(--draft-shade)}
+
+/* ---- Act 1: Papers — LIGHT drafting reading ---- */
+.papers{background:var(--draft-paper);color:var(--draft-ink)}
+.transcript{border:2px solid var(--draft-ink);max-width:820px;padding:26px 30px;background:rgba(255,255,255,.25)}
+.gpa{font:700 44px/1 Menlo,Consolas,monospace;color:var(--draft-shade);position:relative;display:inline-block;padding:0 14px}
+.gpa::before{content:"";position:absolute;inset:-8px -12px;border:1.5px solid var(--pencil);
+  box-shadow:0 0 0 1px var(--pencil);transform:rotate(-.6deg)}
+.ledger{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.ledger td,.ledger th{border:1px solid rgba(27,79,156,.4);padding:6px 10px;text-align:left}
+.ledger th{font:700 10px/1 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.14em;text-transform:uppercase}
+
+/* ---- Act 1 VARIANT: dark cyanotype reading ---- */
+.papers-dark{background:#1B4F9C;color:#F2F6FA;padding-top:34px;padding-bottom:34px}
+.papers-dark .transcript{border-color:#F2F6FA;background:rgba(14,47,102,.35)}
+.papers-dark .gpa{color:#FFD23F}
+.papers-dark .ledger td,.papers-dark .ledger th{border-color:rgba(242,246,250,.4)}
+.papers-dark .spine{background:#F2F6FA}
+
+/* ---- Act 2: Workshop ---- */
+.workshop{background:
+  repeating-linear-gradient(0deg,rgba(42,42,42,.05) 0 1px,transparent 1px 4px),
+  repeating-linear-gradient(90deg,rgba(42,42,42,.05) 0 1px,transparent 1px 4px),
+  var(--linen);
+  color:var(--iron)}
+.shop{border:1.5px solid var(--iron);max-width:760px;padding:22px 26px;margin:0 0 26px 64px;background:rgba(255,255,255,.35);position:relative}
+.shop h3{font:700 20px/1.2 Georgia,serif}
+.shop .years{color:var(--madder);font:700 11px/1 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.colophon{font-style:italic;color:#6d6058;margin-top:10px;font-size:14.5px}
+.colophon::before{content:"❖ ";color:var(--madder)}
+
+/* ---- Dusk bridge ---- */
+.bridge{height:220px;background:linear-gradient(180deg,var(--grid-paper) 0%,#8a7a5e 34%,#3a352c 66%,var(--board) 100%);position:relative}
+.bridge .kicker{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,.75)}
+
+/* ---- Act 3: Platform ---- */
+.platform{background:var(--grid-paper);color:var(--navy)}
+.report{border:2px solid var(--navy);background:var(--grid-card);max-width:820px;padding:26px 30px;box-shadow:6px 6px 0 var(--energy);margin-left:64px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.stat{border:1.5px solid var(--navy);padding:14px}
+.stat b{display:block;font:700 30px/1 Menlo,Consolas,monospace;color:var(--navy)}
+.stat span{font:700 10px/1.4 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#6a6d84}
+.ticker{border-top:1.5px solid var(--navy);margin-top:20px;padding-top:12px;font:12px/1.6 Menlo,Consolas,monospace;color:#4a4d6a}
+
+/* ---- Act 4: Horizon ---- */
+.horizon{background:var(--board);color:var(--cream);padding-bottom:90px}
+.horizon .kicker{color:var(--signal)}
+.flaprow{display:flex;gap:6px;margin:18px 0 34px;flex-wrap:wrap}
+.flap{background:#141412;border:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -6px 8px -6px #000;
+  padding:8px 10px;font:700 15px/1 Menlo,Consolas,monospace;color:var(--cream);position:relative}
+.flap::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.85)}
+.dep{display:grid;grid-template-columns:88px 1fr auto;gap:14px;align-items:center;border-top:1px solid #1d1d1a;padding:14px 4px;max-width:820px}
+.dep .lamp{width:9px;height:9px;border-radius:50%;background:#3a3a34;justify-self:start}
+.dep[data-s="go"] .lamp{background:var(--signal);box-shadow:0 0 10px rgba(245,196,0,.5)}
+.dep b{font:700 13px/1 Menlo,Consolas,monospace;color:var(--signal);letter-spacing:.12em}
+.dep a{color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(242,239,228,.3)}
+.dep a:hover{color:var(--signal)}
+.skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;max-width:820px}
+.chip{border:1px solid #2c2c27;background:#101010;padding:5px 9px;font:11px/1 Menlo,Consolas,monospace;color:#b8b4a4}
+.chip.hot{border-color:var(--signal);color:var(--signal)}
+.colophon-end{margin-top:44px;color:#57554d;font-size:12.5px;font-style:italic}
+.colophon-end b{color:var(--signal);font-style:normal}
+@media (prefers-reduced-motion:reduce){.rise{animation:none}}
+</style>
+</head>
+<body>
+
+<!-- Overture -->
+<section class="overture">
+  <div class="spine"></div><div class="stop" style="top:64px"></div>
+  <div class="note"><b>[DECISION D5]</b>Overture owns NO act style of its own: a light drafting "cover sheet" (cyanotype chrome) that stamps the folio and hands the spine to Act 1.</div>
+  <div class="titleblock rise" style="--i:0">
+    <div class="zone" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="kicker">Folio cover · Journeyman's file · Est. 2014</div>
+    <h1>Quang Vu Nguyen</h1>
+    <div class="role dim mono"><span>Senior Software Engineer — settles once on load; the endless role-cycler dies here</span></div>
+    <p style="margin-top:10px;color:var(--draft-shade);max-width:56ch">Four artifacts from one career, laid along one journey line. The spine on the left runs to the last page.</p>
+  </div>
+</section>
+
+<!-- Act 1: Papers — LIGHT reading (recommended) -->
+<section class="papers">
+  <div class="spine"></div><div class="stop" style="top:70px"></div>
+  <div class="note"><b>[DECISION D1 — A]</b>Papers act = LIGHT drafting-paper inversion (pale paper, blue ink). Cyanotype's dark variant is staged below only for comparison.</div>
+  <div class="sheetlabel kicker">Sheet 1 · The Papers · HCMUS 2014–2018</div>
+  <div class="transcript rise" style="--i:1">
+    <h2>Academic foundations, drawn to scale</h2>
+    <div class="dim" style="max-width:340px;margin:8px 0 16px"><span class="gpa">GPA 8.3/10</span></div>
+    <table class="ledger">
+      <tr><th>Drawing</th><th>Value</th><th>Revision</th></tr>
+      <tr><td>Bachelor of Science · HCM University of Science (VNU)</td><td>Jul 2014 – Oct 2018</td><td>Received</td></tr>
+      <tr><td>Study Promotion Scholarships</td><td>yearly</td><td>Rev A–D</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- Act 1 VARIANT: dark cyanotype (for reaction only) -->
+<section class="papers-dark">
+  <div class="spine" aria-hidden="true"></div>
+  <div class="note" style="background:#0E2F66;color:#cfe0ff;border-color:#F2F6FA"><b>[VARIANT B]</b>Classic dark cyanotype — rejected in D1: a second dark act breaks the single-finale choreography.</div>
+  <div class="sheetlabel kicker" style="border-color:#F2F6FA">Variant · Sheet 1 in classic cyanotype</div>
+  <div class="transcript" style="max-width:680px">
+    <h2>Same sheet, dark register</h2>
+    <div class="dim" style="max-width:300px;margin-top:6px"><span class="gpa">GPA 8.3/10</span></div>
+  </div>
+</section>
+
+<!-- Act 2: Workshop -->
+<section class="workshop">
+  <div class="spine" style="color:var(--madder)"></div><div class="stop" style="top:70px;border-color:var(--madder);background:var(--linen)"></div>
+  <div class="note"><b>[DECISION D2]</b>Workshop = weaver's bench. Three "shop entries" (VNG / KMS / Codelink); each ends in an italic craft-journal colophon. Madder only for years/active marks.</div>
+  <div class="rule2" style="max-width:760px;margin-left:64px"></div>
+  <div class="sheetlabel kicker" style="border-color:var(--iron);color:var(--iron);margin-left:64px">Sheet 2 · The Workshop · 2017–2022</div>
+  <div class="shop rise" style="--i:1">
+    <h3>VNG Education</h3><div class="years">Oct 2017 – Jul 2018 · mobile bench</div>
+    <p style="margin-top:8px">Company Media (React Native) · TalkTV live streaming with donating + chat.</p>
+    <div class="colophon">First threads: learned the React lifecycle on the mobile loom.</div>
+  </div>
+  <div class="shop rise" style="--i:2">
+    <h3>KMS Technology</h3><div class="years">Oct 2018 – Aug 2019 · web bench</div>
+    <p>Ticket e-commerce (React + Redux) · ERTPM tool in micro-frontend architecture.</p>
+    <div class="colophon">Learned to carry one state across many frames — Redux middlewares, shared patterns.</div>
+  </div>
+  <div class="shop rise" style="--i:3">
+    <h3>Codelink</h3><div class="years">Aug 2019 – Aug 2022 · enterprise bench</div>
+    <p>Media management (ElasticSearch, Nuxeo) · medical platform, 90%+ coverage · crypto stock exchange, Socket.io, ReactJS→NextJS.</p>
+    <div class="colophon">Three years at the enterprise loom: tests first, TypeScript warp, real-time weft.</div>
+  </div>
+</section>
+
+<!-- Dusk bridge -->
+<div class="bridge" role="presentation"><div class="kicker">the bench dims · the board lights up</div></div>
+
+<!-- Act 3: Platform -->
+<section class="platform">
+  <div class="spine" style="color:var(--navy)"></div><div class="stop" style="top:70px;border-color:var(--navy);background:var(--grid-paper)"></div>
+  <div class="note"><b>[DECISION D3]</b>Platform = municipal annual report. The grid powers the town: buildings are miniapps. Skills do NOT live here (see D4) — this act keeps only system facts.</div>
+  <div class="sheetlabel kicker" style="border-color:var(--navy);color:var(--navy);margin-left:64px">Sheet 3 · The Platform · NAB, Aug 2022 – present</div>
+  <div class="report rise" style="--i:1">
+    <h2>Lumen Municipal Power Board — district: Core Platform</h2>
+    <div class="kicker" style="color:#6a6d84;margin-top:4px">annual report · micro-frontend grid</div>
+    <div class="stats">
+      <div class="stat"><b>150+</b><span>miniapps powered</span></div>
+      <div class="stat"><b>90%</b><span>bundle reduced</span></div>
+      <div class="stat"><b>7d→30m</b><span>setup via generator</span></div>
+    </div>
+    <div class="ticker">React 18/19 migration · 95% coverage · AppDynamics/Splunk meters · LaunchDarkly switches · Snyk/SonarQube safety valves</div>
+  </div>
+</section>
+
+<!-- Act 4: Horizon -->
+<section class="horizon">
+  <div class="spine" style="color:#1d1d1a"></div><div class="stop" style="top:70px;border-color:var(--signal);background:var(--board)"></div>
+  <div class="note" style="background:#101010;color:var(--signal);border-color:var(--signal)"><b>[DECISION D4 + D6]</b>Horizon owns the finale (dark) AND the skills console (brass chips). Flap title clatters ONCE on load, then rests. Sound: opt-in, clatter only.</div>
+  <div class="kicker">Sheet 4 · The Horizon · next departures</div>
+  <div class="flaprow rise" style="--i:0" aria-label="Where next">
+    <span class="flap">W</span><span class="flap">H</span><span class="flap">E</span><span class="flap">R</span><span class="flap">E</span>
+    <span class="flap">&nbsp;</span><span class="flap">N</span><span class="flap">E</span><span class="flap">X</span><span class="flap">T</span>
+  </div>
+  <div class="dep rise" data-s="go" style="--i:1">
+    <span class="lamp" aria-hidden="true"></span>
+    <span><b>BOARDING</b> &nbsp;AI Code Review Assistant — VS Code extension, provider-agnostic AI review</span>
+    <a href="https://vuquangkhtn.github.io/ai-code-review-assistant/">inspect →</a>
+  </div>
+  <div class="dep" data-s="wait">
+    <span class="lamp"></span>
+    <span>Departures desk — email · GitHub · LinkedIn · Ho Chi Minh City</span>
+    <span class="mono" style="font-size:11px;color:#8a877c">vuquangkhtn@gmail.com</span>
+  </div>
+  <div class="dep" data-s="go">
+    <span class="lamp"></span>
+    <span><b>OPEN</b> &nbsp;Collaboration &amp; interesting problems</span>
+    <span class="mono" style="font-size:11px;color:#8a877c">always</span>
+  </div>
+  <div class="skills" role="list" aria-label="Console: toolkit">
+    <span class="chip hot">TypeScript</span><span class="chip hot">React</span><span class="chip">Redux</span>
+    <span class="chip">Next.js</span><span class="chip">Node</span><span class="chip">GraphQL</span><span class="chip">PostgreSQL</span>
+    <span class="chip">Jest</span><span class="chip">RTL</span><span class="chip">Webpack</span><span class="chip">Docker</span>
+    <span class="chip">micro-frontend</span><span class="chip">monorepo</span>
+  </div>
+  <div class="colophon-end">End of file · <b>QVN-2026</b> · set in Georgia &amp; Menlo · four sheets, one journey line · sound opt-in</div>
+</section>
+
+</body>
+</html>
