@@ -8,6 +8,8 @@ Decisions locked and the spec written for regenerating vuquangkhtn.github.io as 
 
 **Destination redrawn 2026-11-10 by the user's goal:** the destination now extends to the **completed website** — prototype finished by the agent, build split via `/to-tickets`, executed through the `/super-board` run loop with autonomous merges after QA evidence, `/ui-refine-loop` review feeding back until no tickets remain.
 
+**Re-charted 2026-11-11 (v2 — the slide deck):** the user kept the theme but restructured the site: **"From vintage to modern" — a nine-slide era deck** telling the portfolio as a story (Loom → Machine → Terminal → Home Machine → Web → Pocket → Platform → Horizon, plus cover). Eras are the base theme *describing the portfolio* — not history events: no years in the chrome, career facts stay. Full-viewport slides with era-appropriate transitions, one constant narrator plus period artifact text, timeline rail of era names, same deck on mobile. The v1 four-sheet one-scroll structure and board tickets #1–#5, #9, #10 are superseded (closed 🤷); #6/#7 retirement chores parked in Backlog until the new cutover exists; re-split via `/to-tickets` after the v2 prototype.
+
 ## Notes
 
 - **Domain**: personal portfolio; `main` IS the live site — every merge deploys immediately, so nothing untested is ever merged. This map produces decisions and specs only.
@@ -40,9 +42,16 @@ Decisions locked and the spec written for regenerating vuquangkhtn.github.io as 
 - [Write style.md fusion + build brief](t/s1-style-md-and-brief.md): repo-root `style.md` rewritten as the four-unit fusion with provenance; `build-brief.md` written in the prompt-formula.
 - [Copy drafting: every public line, act by act](t/c1-copy-drafting.md): [draft-copy.md](draft-copy.md) holds every public line + aria strings; Webpack→Vite and Release-Hub stories excluded from public copy, garnish dropped, analogy framed as the engineer's own.
 
+### Re-chart 2026-11-11 (v2 decisions)
+
+- [v2 round 1](MAP.md): inherited-tools arc (prologue eras short, career-owning eras from Web on) · nine-slide plan · full-viewport era-transition deck (wheel/keys/swipe, hash links, reduced-motion = cuts) · close-and-resplit board.
+- [v2 round 2](MAP.md): dual-layer narration (constant narrator line + period artifact text) · timeline rail shows era names only, **no years — portfolio focus, eras as staging** (user correction) · same nine slides on mobile · v2 prototype = full rough deck + three choreographed transitions (card feed → Machine, CRT power-on → Terminal, flap flip → Horizon).
+
 ## Not yet specified
 
-- None — the way is clear. All former fog resolved: overture ownership + role gimmick (D5/D6), sound policy (opt-in, Horizon only), skills placement (D4, Horizon console), build handoff (super-board loop per the redrawn destination).
+- Per-era copy drafting (narrator lines + artifact text for all nine slides) — graduates after the v2 prototype reaction.
+- Whether era transitions beyond the three choreographed ones get bespoke treatment or share one generic move — graduates at prototype reaction.
+- QA bar carry-over for the deck (harness checks adapted to slide mechanics) — graduates at the v2 `/to-tickets` split.
 
 ## Out of scope
 

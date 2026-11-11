@@ -4,7 +4,7 @@ Label: `wayfinder:prototype` (HITL) · Status: resolved · Assignee: orchestrato
 
 ## Resolution
 
-Stub built (HITL reaction delegated by the user's 2026-11-10 goal: "Finish prototype yourself"): `~/.zcode/v2/visualizations/a026ad3cbd350241f415b0a8fa44c06aa228dc0cb9c887f0c329086030d5e606/journeyman-folio-p1-stub.html` (outside the repo by design — a decision artifact, not product). Decisions locked:
+Stub built (HITL reaction delegated by the user's 2026-11-10 goal: "Finish prototype yourself"): repo copy with the motion review kit at `docs/wayfinder/journeyman-folio/prototype-stub.html` (commit-published; test locally or at `/docs/wayfinder/journeyman-folio/prototype-stub.html`), decision-annotated inline copy at `~/.zcode/v2/visualizations/a026ad3cbd350241f415b0a8fa44c06aa228dc0cb9c887f0c329086030d5e606/journeyman-folio-p1-stub.html`. Human review 2026-11-11 confirmed the motion kit is the reviewable form; motion constants (clatter 55ms/step `pow(p,1.7)`, recoil `exp(-13t)·cos(40t)` ≤2.4px, settle/spring easings) carried verbatim into the build spec (issue #8). Decisions locked:
 
 - **D1 — Papers register: LIGHT drafting inversion** (pale warm paper, blue ink `#1B4F9C` lines, yellow pencil `#FFD23F`). Variant B (classic dark cyanotype) staged side-by-side and rejected: two dark acts breaks the single-finale choreography the fusion depends on.
 - **D2 — Workshop: weaver's bench**, three "shop entries" (VNG/KMS/Codelink), each closing in an italic craft-journal colophon; madder reserved for years/active marks.
