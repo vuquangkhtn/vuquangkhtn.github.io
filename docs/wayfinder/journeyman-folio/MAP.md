@@ -46,6 +46,8 @@ Decisions locked and the spec written for regenerating vuquangkhtn.github.io as 
 
 - [v2 round 1](MAP.md): inherited-tools arc (prologue eras short, career-owning eras from Web on) · nine-slide plan · full-viewport era-transition deck (wheel/keys/swipe, hash links, reduced-motion = cuts) · close-and-resplit board.
 - [v2 round 2](MAP.md): dual-layer narration (constant narrator line + period artifact text) · timeline rail shows era names only, **no years — portfolio focus, eras as staging** (user correction) · same nine slides on mobile · v2 prototype = full rough deck + three choreographed transitions (card feed → Machine, CRT power-on → Terminal, flap flip → Horizon).
+- [Terminal era: distill CRT study (039)](t/r5-terminal-crt.md): one instrument in a dark hall — four nested shells, 80×39 character grid (font back-solved from a probe span), near-black base + single phosphor accent, 4-layer fx stack (scanlines / 8.5s roll band / glare+vignette / 0.62s beam turn-on), phosphor bloom text-shadow with inverse-video chips, boot choreography (beam flash → ~150cps typed ROM banner → resting prompt with block cursor). Deck use: recolor green, demote amber to the alarm role as a deck-level rhyme.
+- [Home Machine era: distill vector-CRT study (016)](t/r6-home-crt.md): strict mono-phosphor — mint `#B8FFD9` over glow `#5CFFB0` on `#020403`, hierarchy by a five-step beam-brightness ramp (no extra hues), 4×6 stroke font with trace-on entry (2.5s, beam order), 8s idle retrace sweep as the slide's only ambient motion, pincushion jitter + phosphor decay + bloom canvas; reduced-motion = flick/jitter off, fast decay.
 
 ## Not yet specified
 
