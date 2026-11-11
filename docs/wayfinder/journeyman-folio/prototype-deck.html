@@ -3,476 +3,550 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>P2 v3 — The Journeyman's File · a paper storybook</title>
+<title>P2 v4 — The Journeyman's File · scroll-driven storybook (current-portfolio content)</title>
 <style>
-/* ===== v3 — ONE storybook world: cream paper, ink drawings, one accent per page.
-       The era is DRAWN, never worn. Draw-on entrances; one quiet page-turn. ===== */
+/* ===== v4 — paper storybook, SCROLL-DRIVEN: draw-on + parallax track scroll
+       continuously; ambient loops never pause. Content = current portfolio, verbatim-ish. ===== */
 #story-deck{
   --paper:#F7F3E8; --ink:#2E282A; --ink2:#5A5257; --ink3:#8C8287;
-  --verm:#E4572E; --turq:#17BEBB; --sun:#FFC914; --leaf:#76B041;
-  --settle:cubic-bezier(.62,.04,.18,1);
-  --spring:cubic-bezier(.3,1.5,.45,1);
-  position:fixed; inset:0; overflow:hidden; background:var(--paper); color:var(--ink);
-  font:16px/1.5 Georgia,serif;
+  --settle:cubic-bezier(.62,.04,.18,1); --spring:cubic-bezier(.3,1.5,.45,1);
+  background:var(--paper); color:var(--ink); font:16px/1.5 Georgia,serif;
 }
 #story-deck *{box-sizing:border-box;margin:0;padding:0}
+html:has(#story-deck){scroll-behavior:smooth}
+body{background:var(--paper)}
 .mono{font-family:Menlo,Consolas,monospace}
 .kicker{font:700 10.5px/1.5 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--ink2)}
+.grain{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.07;mix-blend-mode:multiply}
 
-/* paper grain — the printed-stock veil */
-.grain{position:absolute;inset:0;z-index:50;pointer-events:none;opacity:.07;mix-blend-mode:multiply}
-
-/* ---- storybook page ---- */
-.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transform:translateY(14px);
-  transition:opacity .9s var(--settle),transform .9s var(--settle),visibility 0s .9s;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:max(30px,env(safe-area-inset-top)) 7vw max(84px,env(safe-area-inset-bottom));text-align:center}
-.slide.active{opacity:1;visibility:visible;transform:none;transition-delay:0s}
-.slide.exit{animation:lift .7s ease forwards}
-@keyframes lift{to{opacity:0;transform:translateY(-26px) rotate(-1.1deg)}}
-.pg-kicker{position:absolute;top:max(26px,env(safe-area-inset-top));left:7vw;text-align:left}
-.pg-num{position:absolute;top:max(26px,env(safe-area-inset-top));right:7vw;font:700 11px/1 Menlo,monospace;color:var(--ink3);letter-spacing:.14em}
-.narr{font:italic 400 clamp(16px,1.9vw,21px)/1.55 Georgia,serif;max-width:54ch;color:var(--ink)}
-.narr::before{content:"— ";color:var(--ink3)}
-.cap{margin-top:14px;display:inline-block;border:1.5px solid var(--ink);padding:9px 18px;border-radius:2px;
-  font:700 11px/1.7 Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);
-  box-shadow:3px 3px 0 rgba(46,40,42,.14)}
-.cap em{color:var(--accent,var(--verm));font-style:normal}
-
-/* ---- illustration grammar ---- */
-.ill{width:min(58vh,86vw);height:auto;max-height:52vh}
+/* ---- page: dense two-column, fills the viewport ---- */
+.page{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:max(34px,env(safe-area-inset-top)) clamp(18px,6vw,84px) 64px;overflow:hidden;
+  border-bottom:1.5px dashed rgba(46,40,42,.18)}
+.pg-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:18px}
+.dates{font:700 12px/1 Menlo,monospace;letter-spacing:.1em;color:var(--paper);background:var(--accent,var(--verm));
+  padding:6px 12px;border:2px solid var(--ink);border-radius:3px;box-shadow:3px 3px 0 rgba(46,40,42,.2);white-space:nowrap;transform:rotate(-1.2deg)}
+.pg-body{display:grid;grid-template-columns:minmax(300px,5fr) minmax(340px,7fr);gap:clamp(20px,4vw,56px);align-items:center}
+.ill-col{position:relative}
+.ill{width:100%;max-height:56vh;height:auto;display:block}
 .ill .s{stroke:var(--ink);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .ill .thin{stroke-width:1.4;opacity:.55}
 .ill .acc-s{stroke:var(--accent,var(--verm));stroke-width:2.6;fill:none;stroke-linecap:round}
 .ill .acc-f{fill:var(--accent,var(--verm));stroke:none}
 .ill .ink-f{fill:var(--ink);stroke:none}
-.ill .paper-f{fill:var(--paper);stroke:none}
-.d{stroke-dasharray:1;stroke-dashoffset:1}
-.f{opacity:0}
-.slide.active .d{animation:draw 1.15s var(--settle) forwards;animation-delay:var(--dd,0ms)}
-.slide.active .f{animation:fillin .55s ease forwards;animation-delay:var(--dd,900ms)}
-@keyframes draw{to{stroke-dashoffset:0}}
-@keyframes fillin{to{opacity:1}}
-
-/* per-illustration idle life */
+/* scroll-driven: strokes draw with --p (page progress), fills settle after */
+.ill .d{stroke-dasharray:1;stroke-dashoffset:calc(1 - clamp(0,var(--p,0)*1.7,1))}
+.ill .f{opacity:clamp(0,calc((var(--p,0) - .45)*2.4),1)}
+/* ambient loops — always running */
 @keyframes shuttle{0%,100%{transform:translateX(0)}50%{transform:translateX(240px)}}
 .loom-shuttle{animation:shuttle 5.5s ease-in-out infinite}
 @keyframes glowpulse{50%{opacity:.55}}
-.tube-glow{animation:glowpulse 4s ease-in-out infinite}
-.tube-glow.t2{animation-delay:1.3s}.tube-glow.t3{animation-delay:2.6s}
+.tube-glow{animation:glowpulse 4s ease-in-out infinite}.tube-glow.t2{animation-delay:1.3s}.tube-glow.t3{animation-delay:2.6s}
 @keyframes blinkstep{50%{opacity:0}}
 .crt-cursor{animation:blinkstep 1.05s steps(1) infinite}
 @keyframes wink{0%,88%,100%{opacity:1}92%,96%{opacity:0}}
 .px-eye{animation:wink 5s infinite}
-@keyframes cursorfloat{0%,100%{transform:translate(0,0)}50%{transform:translate(10px,-6px)}}
+@keyframes cursorfloat{50%{transform:translate(10px,-6px)}}
 .web-cursor{animation:cursorfloat 5s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-8px)}}
-.phone-bob{animation:bob 5.5s ease-in-out infinite;transform-origin:center}
+.phone-bob{animation:bob 5.5s ease-in-out infinite}
 @keyframes wave{50%{opacity:.25}}
 .sig{animation:wave 2.8s ease-in-out infinite}.sig.s2{animation-delay:1.4s}
 @keyframes twinkle{50%{opacity:.25}}
-.win-lit{animation:twinkle 3.6s ease-in-out infinite}
-.win-lit.w2{animation-delay:1.2s}.win-lit.w3{animation-delay:2.4s}
+.win-lit{animation:twinkle 3.6s ease-in-out infinite}.win-lit.w2{animation-delay:1.2s}.win-lit.w3{animation-delay:2.4s}
 @keyframes flow{to{stroke-dashoffset:-40}}
 .flowline{stroke-dasharray:5 5;animation:flow 3.2s linear infinite}
 @keyframes lampb{50%{opacity:.45}}
 .lampglow{animation:lampb 6s ease-in-out infinite}
 @keyframes flipcell{0%,86%,100%{transform:scaleY(1)}90%{transform:scaleY(.12)}94%{transform:scaleY(1)}}
-.flap-live{animation:flipcell 7s ease-in-out infinite;transform-origin:center}
+.flap-live{animation:flipcell 7s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
 
-/* cover */
-.cover-title{font:700 clamp(46px,7vw,86px)/1 Georgia,serif;letter-spacing:-.03em}
-.cover-role{font-family:Menlo,monospace;font-size:clamp(13px,1.4vw,16px);color:var(--ink2);margin-top:14px}
-.cover-frame{border:2px solid var(--ink);padding:clamp(28px,4.5vh,48px) clamp(30px,6vw,64px);position:relative;background:rgba(255,255,255,.25)}
-.cover-frame::before{content:"";position:absolute;inset:7px;border:1px solid var(--ink);opacity:.3;pointer-events:none}
-.journey{width:min(66vh,88vw);margin-top:26px}
-.journey .lbl{font:700 8.5px/1 Menlo,monospace;letter-spacing:.08em;fill:var(--ink2)}
-.hint{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);color:var(--ink2);opacity:.8;animation:hbob 2.6s ease-in-out infinite}
-@keyframes hbob{50%{transform:translate(-50%,7px)}}
+/* content column */
+.content-col{max-width:640px}
+.content-col>*{opacity:clamp(0,calc((var(--p,0) - var(--i,0)) * 3.2),1);transform:translateY(calc((1 - clamp(0,(var(--p,0) - var(--i,0)) * 3.2,1)) * 22px))}
+.roleicon{display:inline-flex;align-items:center;gap:8px;font:700 10.5px/1 Menlo,monospace;letter-spacing:.16em;color:var(--ink2);margin-bottom:8px}
+.roleicon i{width:26px;height:26px;border:2px solid var(--ink);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:9px;color:var(--paper);background:var(--accent,var(--verm))}
+h2{font:700 clamp(24px,3vw,34px)/1.15 Georgia,serif;letter-spacing:-.015em}
+h2 em{font-style:normal;color:var(--accent,var(--verm))}
+.desc{margin:10px 0 14px;color:var(--ink2);font-size:clamp(14.5px,1.35vw,16.5px)}
+.proj{margin-bottom:12px}
+.proj h4,.stack h4{font:700 10.5px/1 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.proj li{list-style:none;position:relative;padding-left:20px;margin-bottom:7px;font-size:clamp(13.5px,1.25vw,15.5px);line-height:1.5}
+.proj li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border:2px solid var(--accent,var(--verm));transform:rotate(45deg)}
+.proj b{font-weight:700}
+.stack{margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--ink);border-radius:20px;padding:5px 12px;font:700 11px/1 Menlo,monospace;letter-spacing:.04em;background:rgba(255,255,255,.45);transition:transform .4s var(--spring),background .3s}
+.chip:hover{transform:translateY(-3px) rotate(-2deg);background:var(--accent,var(--verm));color:var(--paper)}
+.chip.hot{border-color:var(--accent,var(--verm));color:var(--accent,var(--verm))}
+.chip.hot:hover{color:var(--paper)}
+.company{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;border:1.5px solid rgba(46,40,42,.35);border-radius:8px;padding:8px 14px;font:700 10.5px/1.6 Menlo,monospace;letter-spacing:.06em;color:var(--ink2);background:rgba(255,255,255,.3)}
+.company b{color:var(--ink)}
+.company .m{color:var(--accent,var(--verm))}
+.narr{margin-top:12px;font:italic 400 clamp(14.5px,1.5vw,17px)/1.55 Georgia,serif;color:var(--ink2);max-width:56ch}
+.narr::before{content:"— ";color:var(--ink3)}
 
-/* rail + controls — ink on paper */
-#rail{position:absolute;left:0;right:0;bottom:0;z-index:40;display:flex;flex-direction:column;align-items:center;gap:8px;
-  padding:max(10px,env(safe-area-inset-bottom)) 16px 12px}
-.rail-line{position:relative;width:min(640px,84%);height:2px;background:var(--ink);opacity:.9}
-.rail-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent,var(--verm));transition:width .9s var(--settle)}
-.ticks{display:flex;justify-content:space-between;width:min(640px,84%)}
-.ticks button{background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 2px}
-.ticks .dot{width:9px;height:9px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);transition:background .35s,transform .35s var(--spring)}
-.ticks button:hover .dot{transform:scale(1.3)}
-.ticks button.on .dot{background:var(--accent,var(--verm));border-color:var(--ink)}
-.ticks .tlabel{font:700 9.5px/1 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.15em;color:var(--ink3);text-transform:uppercase}
-.ticks button.on .tlabel{color:var(--ink)}
-#ctrls{position:absolute;right:max(16px,env(safe-area-inset-right));bottom:78px;z-index:40;display:flex;gap:8px}
+/* floating decor glyphs — parallax with scroll, drift loops */
+.decor{position:absolute;inset:0;pointer-events:none;z-index:0}
+.glyph{position:absolute;opacity:.5;transform:translateY(calc((1 - var(--p,0)) * var(--depth,30px)))}
+@keyframes drift{50%{translate:8px -10px}}
+.glyph{animation:drift var(--dur,9s) ease-in-out infinite}
+.pg-body{position:relative;z-index:1}
+
+/* rail */
+#rail{position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:60;display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:max(10px,env(safe-area-inset-bottom)) 16px 12px;pointer-events:none}
+#rail .rail-line{position:relative;width:min(560px,72vw);height:2px;background:var(--ink);opacity:.85}
+#rail .rail-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent,var(--verm));transition:background .6s}
+#rail .ticks{display:flex;justify-content:space-between;width:min(560px,72vw);pointer-events:auto}
+#rail .ticks button{background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 2px}
+#rail .dot{width:10px;height:10px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);transition:background .35s,transform .35s var(--spring)}
+#rail .ticks button:hover .dot{transform:scale(1.35)}
+#rail .ticks button.on .dot{background:var(--accent,var(--verm))}
+#rail .tlabel{font:700 9px/1 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase}
+#rail .ticks button.on .tlabel{color:var(--ink)}
+#ctrls{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:76px;z-index:60;display:flex;flex-direction:column;gap:8px}
 #ctrls button{width:44px;height:44px;border-radius:50%;cursor:pointer;font:700 15px/1 Menlo,monospace;
   background:var(--paper);color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 rgba(46,40,42,.18);
   transition:transform .35s var(--spring),background .3s,color .3s}
-#ctrls button:hover{transform:translateY(-3px);background:var(--accent,var(--verm));color:var(--paper);border-color:var(--ink)}
-#story-deck :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+#ctrls button:hover{transform:translateY(-3px);background:var(--accent,var(--verm));color:var(--paper)}
+:is(#story-deck) :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* contact cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:6px}
+.card{border:2px solid var(--ink);border-radius:10px;padding:16px 18px;background:rgba(255,255,255,.4);
+  box-shadow:4px 4px 0 rgba(46,40,42,.16);transition:transform .4s var(--spring)}
+.card:hover{transform:translateY(-4px) rotate(-.6deg)}
+.card .ic{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;margin-bottom:10px;background:var(--accent,var(--verm))}
+.card .ic svg{width:20px;height:20px;stroke:var(--paper);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.card h5{font:700 12px/1 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+.card a,.card p{font:13px/1.5 Menlo,monospace;color:var(--ink2);text-decoration:none;word-break:break-all}
+.card a:hover{color:var(--accent,var(--verm))}
 
 @media (prefers-reduced-motion:reduce){
   #story-deck *{animation:none!important;transition:none!important}
-  .d{stroke-dashoffset:0}.f{opacity:1}
-  .slide{opacity:1;visibility:hidden}.slide.active{visibility:visible}
+  .ill .d{stroke-dashoffset:0}.ill .f{opacity:1}
+  .content-col>*{opacity:1;transform:none}
+  .glyph{transform:none}
 }
-@media (max-width:660px){
-  .ill{width:92vw;max-height:38vh}
-  .narr{font-size:15.5px}
-  .cap{font-size:10px;padding:7px 12px}
-  .ticks .tlabel{display:none}
-  .ticks button{position:relative}
-  .ticks button.on .tlabel{display:block;position:absolute;bottom:32px;white-space:nowrap}
-  #ctrls{bottom:92px}
+@media (max-width:880px){
+  .pg-body{grid-template-columns:1fr;gap:14px}
+  .ill{max-height:34vh;margin:0 auto}
+  .page{padding-bottom:84px}
 }
 </style>
 </head>
 <body>
 <!--FRAG-START-->
-<div id="story-deck" aria-label="The Journeyman's File — a story in nine pages">
+<div id="story-deck" aria-label="The Journeyman's File — a scroll-driven storybook">
 
 <svg class="grain" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(#gr)"/></svg>
 
 <!-- 0 · COVER -->
-<section class="slide active" id="cover" data-accent="#E4572E" style="--accent:#E4572E" aria-label="Cover">
-  <div class="pg-kicker kicker">The Journeyman's File · a paper storybook</div>
-  <div class="cover-frame">
-    <div class="cover-title">Quang Vu Nguyen</div>
-    <div class="cover-role">Senior Software Engineer</div>
+<section class="page" id="cover" data-accent="#E4572E" style="--accent:#E4572E" aria-label="Cover">
+  <div class="decor">
+    <svg class="glyph" style="left:8%;top:18%;--depth:46px;--dur:8s" width="34" height="34" viewBox="0 0 24 24"><path d="M8 6 3 12l5 6M16 6l5 6-5 6" stroke="#8C8287" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    <svg class="glyph" style="right:10%;top:24%;--depth:70px;--dur:11s" width="30" height="30" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" stroke="#E4572E" stroke-width="2" fill="none"/><circle cx="20" cy="6" r="2" fill="#E4572E"/></svg>
+    <svg class="glyph" style="left:16%;bottom:20%;--depth:34px;--dur:9s" width="28" height="28" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" stroke="#8C8287" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg class="glyph" style="right:18%;bottom:16%;--depth:58px;--dur:10s" width="26" height="26" viewBox="0 0 24 24"><path d="M4 18 10 6l4 8 3-4 3 8z" stroke="#5A5257" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
   </div>
-  <svg class="journey" viewBox="0 0 600 120" role="img" aria-label="A dotted journey line through eight stops">
-    <path class="acc-s d" pathLength="1" style="--dd:300ms;stroke-dasharray:.02 .02" stroke-dashoffset="1" d="M30 70 C 110 10, 190 110, 300 60 S 470 10, 570 60"/>
-    <g class="f" style="--dd:1200ms">
-      <circle cx="30" cy="70" r="7" class="acc-f"/>
-      <circle cx="108" cy="38" r="5" class="s ink-f"/><circle cx="196" cy="78" r="5" class="ink-f"/>
-      <circle cx="300" cy="60" r="5" class="ink-f"/><circle cx="404" cy="76" r="5" class="ink-f"/>
-      <circle cx="470" cy="26" r="5" class="ink-f"/><circle cx="540" cy="52" r="5" class="ink-f"/>
-      <circle cx="570" cy="60" r="7" fill="none" class="s"/>
-    </g>
-    <g class="f" style="--dd:1400ms">
-      <text x="26" y="98" class="lbl">START</text><text x="96" y="22" class="lbl">LOOM</text>
-      <text x="186" y="102" class="lbl">TUBES</text><text x="282" y="42" class="lbl">TERM</text>
-      <text x="390" y="100" class="lbl">8-BIT</text><text x="456" y="10" class="lbl">WEB</text>
-      <text x="530" y="36" class="lbl">GRID</text><text x="546" y="86" class="lbl">NIGHT</text>
-    </g>
-  </svg>
-  <p class="narr" style="margin-top:22px">A story in nine pages — from the loom to the thinking machine. It is my story; the machines are the scenery.</p>
-  <div class="pg-num">cover</div>
-  <div class="hint mono" aria-hidden="true">scroll · swipe · arrow keys ↓</div>
+  <div class="pg-head"><span class="kicker">The Journeyman's File · a paper storybook</span><span class="dates">EST. 2014</span></div>
+  <div class="pg-body" style="grid-template-columns:1fr;text-align:center;justify-items:center">
+    <div>
+      <div style="border:2px solid var(--ink);padding:clamp(24px,4vh,44px) clamp(28px,6vw,60px);position:relative;display:inline-block;background:rgba(255,255,255,.25);box-shadow:6px 6px 0 rgba(46,40,42,.12)">
+        <div style="position:absolute;inset:7px;border:1px solid var(--ink);opacity:.3;pointer-events:none"></div>
+        <h1 style="font:700 clamp(40px,6vw,76px)/1 Georgia,serif;letter-spacing:-.03em">Quang Vu Nguyen</h1>
+        <div class="mono" style="color:var(--ink2);margin-top:12px;font-size:clamp(13px,1.4vw,16px)">Senior Software Engineer · Ho Chi Minh City</div>
+      </div>
+      <p class="narr" style="margin:24px auto 0;max-width:52ch">This timeline showcases my professional growth, key projects, and technical achievements — told from the loom to the thinking machine. It is my story; the machines are the scenery.</p>
+      <div class="mono" style="margin-top:20px;font-size:11px;color:var(--ink3);letter-spacing:.14em">SCROLL · 9 PAGES · ~5 MIN</div>
+    </div>
+  </div>
 </section>
 
-<!-- 1 · LOOM — education -->
-<section class="slide" id="loom" data-accent="#E4572E" style="--accent:#E4572E" aria-label="The Loom — education">
-  <div class="pg-kicker kicker">Page one · Foundations</div>
-  <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn Jacquard loom weaving a patterned cloth">
-    <path class="s d" pathLength="1" d="M80 40 H520 M80 40 V360 M520 40 V360 M80 360 H520"/>
-    <path class="s d thin" pathLength="1" style="--dd:250ms" d="M80 130 H520 M80 250 H520"/>
-    <g class="d thin" style="--dd:450ms">
-      <path pathLength="1" class="s" d="M150 40 V250 M180 40 V250 M210 40 V250 M240 40 V250 M270 40 V250 M300 40 V250 M330 40 V250 M360 40 V250 M390 40 V250 M420 40 V250 M450 40 V250"/>
-    </g>
-    <rect class="s d" pathLength="1" style="--dd:650ms" x="150" y="286" width="300" height="56" rx="8"/>
-    <g class="f" style="--dd:1100ms">
-      <rect x="166" y="298" width="268" height="6" class="acc-f"/><rect x="166" y="312" width="268" height="6" class="acc-f" opacity=".55"/>
-      <rect x="166" y="326" width="268" height="6" class="acc-f" opacity=".3"/>
-    </g>
-    <g class="f loom-shuttle" style="--dd:1300ms"><ellipse cx="180" cy="266" rx="20" ry="8" class="acc-f"/></g>
-    <path class="s d thin" pathLength="1" style="--dd:800ms" d="M540 120 q40 30 0 60 M540 120 q-14 30 0 60"/>
-  </svg>
-  <span class="cap f" style="--dd:1500ms">B.Sc. HCMUS (VNU) · <em>GPA 8.3/10</em> · scholarships, yearly · 2014–2018</span>
-  <p class="narr f" style="--dd:1650ms">The craft begins at the pattern sheet: a science degree in Ho Chi Minh City — honors every year, scholarships every year.</p>
-  <div class="pg-num">1 / 8</div>
+<!-- 1 · EDUCATION -->
+<section class="page" id="education" data-accent="#E4572E" style="--accent:#E4572E" aria-label="Education">
+  <div class="decor">
+    <svg class="glyph" style="right:8%;top:16%;--depth:52px;--dur:9s" width="30" height="30" viewBox="0 0 24 24"><path d="M12 4 2 9l10 5 10-5zM6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5" stroke="#8C8287" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg class="glyph" style="left:6%;bottom:18%;--depth:40px;--dur:8s" width="24" height="24" viewBox="0 0 24 24"><path d="M5 20 12 4l7 16M8.5 14h7" stroke="#E4572E" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </div>
+  <div class="pg-head"><span class="kicker">Page one · Foundations · the pattern sheet</span><span class="dates">2014 – 2018</span></div>
+  <div class="pg-body">
+    <div class="ill-col">
+      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn Jacquard loom weaving a patterned cloth">
+        <path class="s d" pathLength="1" d="M80 40 H520 M80 40 V360 M520 40 V360 M80 360 H520"/>
+        <path class="s d thin" pathLength="1" d="M80 130 H520 M80 250 H520"/>
+        <g class="d thin"><path pathLength="1" class="s" d="M150 40 V250 M180 40 V250 M210 40 V250 M240 40 V250 M270 40 V250 M300 40 V250 M330 40 V250 M360 40 V250 M390 40 V250 M420 40 V250 M450 40 V250"/></g>
+        <rect class="s d" pathLength="1" x="150" y="286" width="300" height="56" rx="8"/>
+        <g class="f"><rect x="166" y="298" width="268" height="6" class="acc-f"/><rect x="166" y="312" width="268" height="6" class="acc-f" opacity=".55"/><rect x="166" y="326" width="268" height="6" class="acc-f" opacity=".3"/></g>
+        <g class="f loom-shuttle"><ellipse cx="180" cy="266" rx="20" ry="8" class="acc-f"/></g>
+        <path class="s d thin" pathLength="1" d="M540 120 q40 30 0 60 M540 120 q-14 30 0 60"/>
+      </svg>
+    </div>
+    <div class="content-col">
+      <div class="roleicon" style="--i:0"><i>EDU</i> Academic foundation</div>
+      <h2 style="--i:.05">Bachelor of Science · <em>HCMUS</em></h2>
+      <p class="desc" style="--i:.1">HCM University of Science — Vietnam National University. Completed a strong foundation in computer science and software development principles: algorithms, data structures, engineering basics.</p>
+      <div class="proj" style="--i:.15">
+        <h4>The record</h4>
+        <ul>
+          <li><b>GPA 8.3 / 10</b> — graduated with high academic achievement</li>
+          <li><b>Study Promotion Scholarships</b> — received yearly for academic excellence</li>
+          <li><b>Computer Science focus</b> — the footing every build since rests on</li>
+        </ul>
+      </div>
+      <div class="stack" style="--i:.2"><h4>First threads</h4><div class="chips"><span class="chip">C fundamentals</span><span class="chip">algorithms</span><span class="chip">data structures</span><span class="chip">OOP</span></div></div>
+      <div class="company" style="--i:.25"><b>HCMUS · VNU</b> · <span class="m">Top University</span> · Top 3 Vietnam · 50K+ students</div>
+    </div>
+  </div>
 </section>
 
-<!-- 2 · MACHINE — VNG -->
-<section class="slide" id="machine" data-accent="#FFC914" style="--accent:#FFC914" aria-label="The Machine — VNG">
-  <div class="pg-kicker kicker">Page two · First program — VNG Education · 2017–2018</div>
-  <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn vacuum-tube computer with a punch card feeding in">
-    <rect class="s d" pathLength="1" x="120" y="150" width="340" height="170" rx="14"/>
-    <path class="s d thin" pathLength="1" style="--dd:300ms" d="M120 225 H460"/>
-    <g class="d" style="--dd:450ms">
-      <circle pathLength="1" class="s" cx="185" cy="270" r="14"/><path class="s" pathLength="1" d="M185 270 L192 262"/>
-      <circle pathLength="1" class="s" cx="245" cy="270" r="14"/><path class="s" pathLength="1" d="M245 270 L238 262"/>
-      <circle pathLength="1" class="s" cx="305" cy="270" r="14"/><path class="s" pathLength="1" d="M305 270 L312 262"/>
-    </g>
-    <g class="d" style="--dd:600ms">
-      <rect pathLength="1" class="s" x="195" y="72" width="34" height="76" rx="17"/>
-      <rect pathLength="1" class="s" x="262" y="72" width="34" height="76" rx="17"/>
-      <rect pathLength="1" class="s" x="329" y="72" width="34" height="76" rx="17"/>
-    </g>
-    <g class="f" style="--dd:1000ms">
-      <circle cx="212" cy="110" r="24" class="acc-f tube-glow" opacity=".35"/>
-      <circle cx="279" cy="110" r="24" class="acc-f tube-glow t2" opacity=".35"/>
-      <circle cx="346" cy="110" r="24" class="acc-f tube-glow t3" opacity=".35"/>
-    </g>
-    <path class="s d thin" pathLength="1" style="--dd:750ms" d="M212 90 V130 M279 90 V130 M346 90 V130"/>
-    <g transform="rotate(7 470 210)">
-      <rect class="s d" pathLength="1" style="--dd:850ms" x="428" y="176" width="112" height="70" rx="6"/>
-      <g class="f" style="--dd:1250ms">
-        <circle cx="446" cy="196" r="4" class="ink-f"/><circle cx="466" cy="196" r="4" class="ink-f"/><circle cx="486" cy="196" r="4" class="ink-f"/>
-        <circle cx="506" cy="196" r="4" class="ink-f"/><circle cx="526" cy="196" r="4" class="ink-f"/>
-        <circle cx="456" cy="226" r="4" class="ink-f"/><circle cx="476" cy="226" r="4" class="ink-f"/><circle cx="496" cy="226" r="4" class="ink-f"/><circle cx="516" cy="226" r="4" class="ink-f"/>
-      </g>
-    </g>
-    <path class="acc-s d" pathLength="1" style="--dd:1000ms" d="M430 240 q-30 40 -66 44"/>
-  </svg>
-  <span class="cap f" style="--dd:1500ms">Company Media · React Native — <em>TalkTV</em> · live + donate + chat</span>
-  <p class="narr f" style="--dd:1650ms">The first instructions were mine to run: a social app in the hand, a live-video service with donations and chat.</p>
-  <div class="pg-num">2 / 8</div>
+<!-- 2 · VNG -->
+<section class="page" id="vng" data-accent="#FFC914" style="--accent:#FFC914" aria-label="VNG Education">
+  <div class="decor">
+    <svg class="glyph" style="right:7%;top:20%;--depth:64px;--dur:10s" width="28" height="28" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="5" stroke="#8C8287" stroke-width="2" fill="none"/><path d="M12 7v4" stroke="#FFC914" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg class="glyph" style="left:5%;bottom:22%;--depth:42px;--dur:8.5s" width="30" height="30" viewBox="0 0 24 24"><path d="M4 14a8 8 0 0 1 16 0M8 18a4 4 0 0 1 8 0" stroke="#5A5257" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </div>
+  <div class="pg-head"><span class="kicker">Page two · First program · the machine age</span><span class="dates">OCT 2017 – JUL 2018</span></div>
+  <div class="pg-body">
+    <div class="ill-col">
+      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn vacuum-tube computer with a punch card feeding in">
+        <rect class="s d" pathLength="1" x="120" y="150" width="340" height="170" rx="14"/>
+        <path class="s d thin" pathLength="1" d="M120 225 H460"/>
+        <g class="d"><circle pathLength="1" class="s" cx="185" cy="270" r="14"/><path class="s" pathLength="1" d="M185 270 L192 262"/><circle pathLength="1" class="s" cx="245" cy="270" r="14"/><path class="s" pathLength="1" d="M245 270 L238 262"/><circle pathLength="1" class="s" cx="305" cy="270" r="14"/><path class="s" pathLength="1" d="M305 270 L312 262"/></g>
+        <g class="d"><rect pathLength="1" class="s" x="195" y="72" width="34" height="76" rx="17"/><rect pathLength="1" class="s" x="262" y="72" width="34" height="76" rx="17"/><rect pathLength="1" class="s" x="329" y="72" width="34" height="76" rx="17"/></g>
+        <g class="f"><circle cx="212" cy="110" r="24" class="acc-f tube-glow" opacity=".35"/><circle cx="279" cy="110" r="24" class="acc-f tube-glow t2" opacity=".35"/><circle cx="346" cy="110" r="24" class="acc-f tube-glow t3" opacity=".35"/></g>
+        <path class="s d thin" pathLength="1" d="M212 90 V130 M279 90 V130 M346 90 V130"/>
+        <g transform="rotate(7 470 210)"><rect class="s d" pathLength="1" x="428" y="176" width="112" height="70" rx="6"/>
+          <g class="f"><circle cx="446" cy="196" r="4" class="ink-f"/><circle cx="466" cy="196" r="4" class="ink-f"/><circle cx="486" cy="196" r="4" class="ink-f"/><circle cx="506" cy="196" r="4" class="ink-f"/><circle cx="526" cy="196" r="4" class="ink-f"/><circle cx="456" cy="226" r="4" class="ink-f"/><circle cx="476" cy="226" r="4" class="ink-f"/><circle cx="496" cy="226" r="4" class="ink-f"/><circle cx="516" cy="226" r="4" class="ink-f"/></g></g>
+        <path class="acc-s d" pathLength="1" d="M430 240 q-30 40 -66 44"/>
+      </svg>
+    </div>
+    <div class="content-col">
+      <div class="roleicon" style="--i:0"><i>VNG</i> Mobile development</div>
+      <h2 style="--i:.05">Software Engineer · <em>VNG Education</em></h2>
+      <p class="desc" style="--i:.1">Built mobile applications using React Native and developed live streaming solutions — where the React component lifecycle and mobile fundamentals stopped being theory.</p>
+      <div class="proj" style="--i:.15">
+        <h4>Key projects</h4>
+        <ul>
+          <li><b>Company Media</b> — social networking application with React Native</li>
+          <li><b>TalkTV</b> — live stream application with advanced donating and chatting features</li>
+        </ul>
+      </div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">React Native</span><span class="chip">JavaScript</span><span class="chip">live streaming</span><span class="chip">mobile</span></div></div>
+      <div class="company" style="--i:.25"><b>VNG Corporation</b> · <span class="m">Vietnam's First Unicorn</span> · $1B+ valuation · 100M+ Zalo users</div>
+    </div>
+  </div>
 </section>
 
-<!-- 3 · TERMINAL — KMS -->
-<section class="slide" id="terminal" data-accent="#17BEBB" style="--accent:#17BEBB" aria-label="The Terminal — KMS">
-  <div class="pg-kicker kicker">Page three · The conversation — KMS Technology · 2018–2019</div>
-  <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn CRT terminal on a desk with a blinking prompt">
-    <path class="s d" pathLength="1" d="M90 344 H510"/>
-    <rect class="s d" pathLength="1" style="--dd:200ms" x="168" y="84" width="264" height="196" rx="18"/>
-    <rect class="f" style="--dd:900ms" x="188" y="104" width="224" height="136" rx="8" fill="#101F1B"/>
-    <g class="f" style="--dd:1200ms" font-family="Menlo,Consolas,monospace" fill="#3BFF8C" font-size="17">
-      <text x="204" y="136">$ bench --list</text>
-      <text x="204" y="162" opacity=".8">ticket-ecommerce ✓</text>
-      <text x="204" y="188" opacity=".8">ertpm --shared ✓</text>
-    </g>
-    <rect class="f crt-cursor" style="--dd:1300ms" x="204" y="202" width="11" height="17" fill="#3BFF8C"/>
-    <path class="s d" pathLength="1" style="--dd:450ms" d="M250 280 L240 320 M350 280 L360 320 M240 320 H360"/>
-    <rect class="s d" pathLength="1" style="--dd:600ms" x="226" y="308" width="188" height="26" rx="6"/>
-    <path class="s d thin" pathLength="1" style="--dd:750ms" d="M240 320 H400 M254 316 V308 M278 316 V308 M302 316 V308 M326 316 V308 M350 316 V308 M374 316 V308"/>
-    <path class="acc-s d" pathLength="1" style="--dd:900ms" d="M452 300 q40 -6 44 -44"/>
-  </svg>
-  <span class="cap f" style="--dd:1500ms">Ticket e-commerce · <em>React + Redux</em> — ERTPM · micro-frontend, shared</span>
-  <p class="narr f" style="--dd:1650ms">Then the work became conversation: one state, carried across many frames — tickets traded on the web, an agile tool shared between departments.</p>
-  <div class="pg-num">3 / 8</div>
+<!-- 3 · KMS -->
+<section class="page" id="kms" data-accent="#17BEBB" style="--accent:#17BEBB" aria-label="KMS Technology">
+  <div class="decor">
+    <svg class="glyph" style="right:9%;top:18%;--depth:48px;--dur:9s" width="30" height="30" viewBox="0 0 24 24"><path d="M4 17l4-8 3 5 3-7 6 10z" stroke="#17BEBB" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+    <svg class="glyph" style="left:7%;bottom:20%;--depth:60px;--dur:11s" width="26" height="26" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.4" fill="none" stroke="#8C8287" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="none" stroke="#8C8287" stroke-width="2"/><circle cx="19" cy="12" r="2.4" fill="none" stroke="#8C8287" stroke-width="2"/><path d="M7.4 12h2.2M14.4 12h2.2" stroke="#8C8287" stroke-width="2"/></svg>
+  </div>
+  <div class="pg-head"><span class="kicker">Page three · The conversation · the terminal</span><span class="dates">OCT 2018 – AUG 2019</span></div>
+  <div class="pg-body">
+    <div class="ill-col">
+      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn CRT terminal on a desk with a blinking session">
+        <path class="s d" pathLength="1" d="M90 344 H510"/>
+        <rect class="s d" pathLength="1" x="168" y="84" width="264" height="196" rx="18"/>
+        <rect class="f" x="188" y="104" width="224" height="136" rx="8" fill="#101F1B"/>
+        <g class="f" font-family="Menlo,Consolas,monospace" fill="#3BFF8C" font-size="16">
+          <text x="204" y="136">$ bench --list</text>
+          <text x="204" y="162" opacity=".8">ticket-ecommerce ✓</text>
+          <text x="204" y="188" opacity=".8">ertpm --shared ✓</text>
+        </g>
+        <rect class="f crt-cursor" x="204" y="202" width="11" height="17" fill="#3BFF8C"/>
+        <path class="s d" pathLength="1" d="M250 280 L240 320 M350 280 L360 320 M240 320 H360"/>
+        <rect class="s d" pathLength="1" x="226" y="308" width="188" height="26" rx="6"/>
+        <path class="s d thin" pathLength="1" d="M240 320 H400 M254 316 V308 M278 316 V308 M302 316 V308 M326 316 V308 M350 316 V308 M374 316 V308"/>
+        <path class="acc-s d" pathLength="1" d="M452 300 q40 -6 44 -44"/>
+      </svg>
+    </div>
+    <div class="content-col">
+      <div class="roleicon" style="--i:0"><i>KMS</i> Web development</div>
+      <h2 style="--i:.05">Front-End Software Engineer · <em>KMS Technology</em></h2>
+      <p class="desc" style="--i:.1">Developed e-commerce and management applications with React and Angular — learning to carry one state across many frames.</p>
+      <div class="proj" style="--i:.15">
+        <h4>Key projects</h4>
+        <ul>
+          <li><b>Ticket E-commerce</b> — event ticket exchange platform with React and Redux</li>
+          <li><b>ERTPM Tool</b> — agile process management website with micro frontend architecture</li>
+          <li><b>Learned</b> — Redux middlewares; shared state management between platforms</li>
+        </ul>
+      </div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">React</span><span class="chip hot">Redux</span><span class="chip">Angular</span><span class="chip">micro frontend</span></div></div>
+      <div class="company" style="--i:.25"><b>KMS Technology</b> · <span class="m">Sao Khue Award Winner</span> · Fortune 1000 clients · 15+ years</div>
+    </div>
+  </div>
 </section>
 
-<!-- 4 · HOME — Codelink -->
-<section class="slide" id="home" data-accent="#E4572E" style="--accent:#E4572E" aria-label="The Home Machine — Codelink">
-  <div class="pg-kicker kicker">Page four · The long bench — Codelink · 2019–2022</div>
-  <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn home computer with cassette tape and pixel smiley">
-    <rect class="s d" pathLength="1" x="150" y="110" width="270" height="180" rx="12"/>
-    <rect class="s d" pathLength="1" style="--dd:250ms" x="178" y="136" width="214" height="112" rx="6"/>
-    <g class="f" style="--dd:1000ms">
-      <rect x="222" y="164" width="14" height="14" class="acc-f px-eye"/>
-      <rect x="334" y="164" width="14" height="14" class="acc-f"/>
-      <rect x="236" y="208" width="12" height="10" class="acc-f"/><rect x="250" y="218" width="12" height="10" class="acc-f"/>
-      <rect x="264" y="224" width="12" height="10" class="acc-f"/><rect x="278" y="218" width="12" height="10" class="acc-f"/>
-      <rect x="292" y="208" width="12" height="10" class="acc-f"/>
-    </g>
-    <path class="s d thin" pathLength="1" style="--dd:450ms" d="M150 260 H420 M170 274 H400"/>
-    <g class="d" style="--dd:600ms">
-      <rect pathLength="1" class="s" x="438" y="120" width="110" height="72" rx="6"/>
-      <circle pathLength="1" class="s" cx="466" cy="156" r="17"/><circle pathLength="1" class="s" cx="520" cy="156" r="17"/>
-    </g>
-    <g class="f" style="--dd:1100ms">
-      <rect x="452" y="130" width="82" height="10" rx="2" class="acc-f" opacity=".8"/>
-    </g>
-    <path class="s d thin" pathLength="1" style="--dd:800ms" d="M466 139 V173 M520 139 V173 M482 156 H504"/>
-    <path class="acc-s d" pathLength="1" style="--dd:950ms" d="M420 200 q30 0 40 -8"/>
-  </svg>
-  <span class="cap f" style="--dd:1500ms">Media · ElasticSearch — Medical · <em>90%+ tests</em> — Exchange · Socket.io</span>
-  <p class="narr f" style="--dd:1650ms">Three years at the long bench: archives searched by the million, a medical platform held to ninety percent, a trading floor streaming in real time.</p>
-  <div class="pg-num">4 / 8</div>
+<!-- 4 · CODELINK -->
+<section class="page" id="codelink" data-accent="#E4572E" style="--accent:#E4572E" aria-label="Codelink">
+  <div class="decor">
+    <svg class="glyph" style="right:8%;top:22%;--depth:56px;--dur:8s" width="28" height="28" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2" stroke="#8C8287" stroke-width="2" fill="none"/><path d="M8 21h8M12 17v4" stroke="#8C8287" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg class="glyph" style="left:6%;top:30%;--depth:70px;--dur:12s" width="26" height="26" viewBox="0 0 24 24"><path d="M12 20a8 8 0 1 1 8-8" stroke="#E4572E" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M12 12l5-3" stroke="#E4572E" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg class="glyph" style="left:12%;bottom:14%;--depth:38px;--dur:9s" width="24" height="24" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z" stroke="#5A5257" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="pg-head"><span class="kicker">Page four · The long bench · the home machine</span><span class="dates">AUG 2019 – AUG 2022</span></div>
+  <div class="pg-body">
+    <div class="ill-col">
+      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn home computer with cassette tape and pixel smiley">
+        <rect class="s d" pathLength="1" x="150" y="110" width="270" height="180" rx="12"/>
+        <rect class="s d" pathLength="1" x="178" y="136" width="214" height="112" rx="6"/>
+        <g class="f"><rect x="222" y="164" width="14" height="14" class="acc-f px-eye"/><rect x="334" y="164" width="14" height="14" class="acc-f"/><rect x="236" y="208" width="12" height="10" class="acc-f"/><rect x="250" y="218" width="12" height="10" class="acc-f"/><rect x="264" y="224" width="12" height="10" class="acc-f"/><rect x="278" y="218" width="12" height="10" class="acc-f"/><rect x="292" y="208" width="12" height="10" class="acc-f"/></g>
+        <path class="s d thin" pathLength="1" d="M150 260 H420 M170 274 H400"/>
+        <g class="d"><rect pathLength="1" class="s" x="438" y="120" width="110" height="72" rx="6"/><circle pathLength="1" class="s" cx="466" cy="156" r="17"/><circle pathLength="1" class="s" cx="520" cy="156" r="17"/></g>
+        <g class="f"><rect x="452" y="130" width="82" height="10" rx="2" class="acc-f" opacity=".8"/></g>
+        <path class="s d thin" pathLength="1" d="M466 139 V173 M520 139 V173 M482 156 H504"/>
+        <path class="acc-s d" pathLength="1" d="M420 200 q30 0 40 -8"/>
+      </svg>
+    </div>
+    <div class="content-col">
+      <div class="roleicon" style="--i:0"><i>CL</i> Enterprise bench</div>
+      <h2 style="--i:.05">Front-End Software Engineer · <em>Codelink</em></h2>
+      <p class="desc" style="--i:.1">Built enterprise applications with advanced optimization and testing strategies — three years of practice, tests first.</p>
+      <div class="proj" style="--i:.15">
+        <h4>Key projects</h4>
+        <ul>
+          <li><b>Media Management</b> — enterprise platform with ReactJS, ElasticSearch, and Nuxeo</li>
+          <li><b>Medical Service Web App</b> — healthcare platform with 90%+ test coverage</li>
+          <li><b>Stock Exchange</b> — cryptocurrency trading platform with Socket.io real-time features</li>
+          <li><b>Craft</b> — ES6→TypeScript, TDD by pair programming, React→Next migration</li>
+        </ul>
+      </div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">TypeScript</span><span class="chip hot">Next.js</span><span class="chip">ElasticSearch</span><span class="chip">Nuxeo</span><span class="chip">Socket.io</span><span class="chip">TDD</span><span class="chip">RTL</span></div></div>
+      <div class="company" style="--i:.25"><b>Codelink</b> · <span class="m">Agile Development Studio</span> · 70+ global clients · 95% retention</div>
+    </div>
+  </div>
 </section>
 
-<!-- 5 · WEB — NAB begins -->
-<section class="slide" id="web" data-accent="#76B041" style="--accent:#76B041" aria-label="The Web — NAB platform begins">
-  <div class="pg-kicker kicker">Page five · The platform years — NAB · 2022–present</div>
-  <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn monitor showing an early browser window with links">
-    <rect class="s d" pathLength="1" x="140" y="70" width="320" height="240" rx="12"/>
-    <path class="s d" pathLength="1" style="--dd:250ms" d="M250 310 L235 344 M350 310 L365 344 M215 344 H385"/>
-    <g class="d" style="--dd:400ms">
-      <rect pathLength="1" class="s" x="170" y="100" width="260" height="176" rx="6"/>
-      <path pathLength="1" class="s" d="M170 128 H430"/>
-      <rect pathLength="1" class="s thin" x="182" y="108" width="150" height="12" rx="6"/>
-    </g>
-    <g class="f" style="--dd:900ms">
-      <circle cx="416" cy="114" r="4" class="ink-f"/><circle cx="402" cy="114" r="4" class="acc-f"/>
-    </g>
-    <g class="d thin" style="--dd:700ms">
-      <path pathLength="1" class="s" d="M186 152 H320 M186 176 H290 M186 224 H414 M186 248 H360"/>
-    </g>
-    <path class="acc-s d" pathLength="1" style="--dd:900ms" d="M186 166 H300"/>
-    <rect class="s d thin" pathLength="1" style="--dd:800ms" x="330" y="146" width="84" height="60" rx="4"/>
-    <path class="s d thin" pathLength="1" style="--dd:950ms" d="M338 196 L358 172 L372 188 L386 168 L406 196"/>
-    <g class="f web-cursor" style="--dd:1300ms">
-      <path d="M310 240 l0 16 4 -5 3 7 4 -2 -3 -7 6 0 z" class="ink-f"/>
-    </g>
-  </svg>
-  <span class="cap f" style="--dd:1500ms">Core Platform · shared SDK — <em>React 18/19</em> · 95% coverage — one grid, 150+ miniapps</span>
-  <p class="narr f" style="--dd:1650ms">The web grew up, and so did the work: I joined a bank's innovation centre to build the wiring every team builds on.</p>
-  <div class="pg-num">5 / 8</div>
+<!-- 5 · NAB -->
+<section class="page" id="nab" data-accent="#FFC914" style="--accent:#FFC914" aria-label="NAB">
+  <div class="decor">
+    <svg class="glyph" style="right:6%;top:16%;--depth:66px;--dur:10s" width="30" height="30" viewBox="0 0 24 24"><path d="M3 20h18M5 20v-6h4v6M11 20V8h4v12M17 20v-9h3v9" stroke="#FFC914" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+    <svg class="glyph" style="left:5%;bottom:16%;--depth:44px;--dur:8.6s" width="28" height="28" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4" fill="#FFC914"/><circle cx="6" cy="18" r="2.4" fill="none" stroke="#8C8287" stroke-width="2"/><circle cx="18" cy="6" r="2.4" fill="none" stroke="#8C8287" stroke-width="2"/><circle cx="18" cy="18" r="2.4" fill="none" stroke="#8C8287" stroke-width="2"/><path d="M8.4 6h7.2M6 8.4v7.2M18 8.4v7.2M8.4 18h7.2" stroke="#8C8287" stroke-width="1.6"/></svg>
+  </div>
+  <div class="pg-head"><span class="kicker">Page five · The platform years · the power grid</span><span class="dates">AUG 2022 – PRESENT</span></div>
+  <div class="pg-body">
+    <div class="ill-col">
+      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn town of buildings on a power grid, windows lit, one substation">
+        <path class="s d" pathLength="1" d="M70 330 H530"/>
+        <g class="d"><rect pathLength="1" class="s" x="90" y="200" width="70" height="130"/><rect pathLength="1" class="s" x="180" y="140" width="80" height="190"/><rect pathLength="1" class="s" x="280" y="220" width="64" height="110"/><rect pathLength="1" class="s" x="362" y="110" width="88" height="220"/><rect pathLength="1" class="s" x="466" y="180" width="62" height="150"/></g>
+        <path class="s d" pathLength="1" d="M160 200 q40 -34 92 -34 M260 152 q26 -18 44 -18 M450 130 q20 8 22 32"/>
+        <path class="acc-s flowline" pathLength="1" d="M160 200 q40 -34 92 -34 M260 152 q26 -18 44 -18 M450 130 q20 8 22 32"/>
+        <g class="f">
+          <rect x="102" y="216" width="12" height="14" class="acc-f win-lit"/><rect x="128" y="216" width="12" height="14" class="acc-f win-lit w2" opacity=".7"/><rect x="102" y="244" width="12" height="14" class="acc-f win-lit w3" opacity=".55"/>
+          <rect x="196" y="158" width="12" height="14" class="acc-f win-lit w2"/><rect x="224" y="158" width="12" height="14" class="acc-f win-lit" opacity=".7"/><rect x="196" y="188" width="12" height="14" class="acc-f win-lit w3" opacity=".6"/><rect x="252" y="188" width="12" height="14" class="acc-f win-lit" opacity=".8"/>
+          <rect x="294" y="238" width="12" height="14" class="acc-f win-lit w2" opacity=".75"/><rect x="320" y="238" width="12" height="14" class="acc-f win-lit" opacity=".6"/>
+          <rect x="378" y="128" width="12" height="14" class="acc-f win-lit"/><rect x="406" y="128" width="12" height="14" class="acc-f win-lit w3" opacity=".7"/><rect x="434" y="128" width="12" height="14" class="acc-f win-lit w2" opacity=".75"/><rect x="378" y="158" width="12" height="14" class="acc-f win-lit" opacity=".65"/>
+          <rect x="480" y="196" width="12" height="14" class="acc-f win-lit w2" opacity=".7"/><rect x="506" y="196" width="12" height="14" class="acc-f win-lit" opacity=".55"/>
+        </g>
+        <g class="d"><rect pathLength="1" class="s" x="272" y="300" width="34" height="30"/><path pathLength="1" class="acc-s" d="M289 305 l-9 12 h8 l-6 11 14 -14 h-8 z"/></g>
+      </svg>
+    </div>
+    <div class="content-col">
+      <div class="roleicon" style="--i:0"><i>NAB</i> Senior role · the grid</div>
+      <h2 style="--i:.05">Senior Software Engineer · <em>NAB Innovation Centre</em></h2>
+      <p class="desc" style="--i:.1">Core Platform — the shared SDK and runtime behind NAB Platform, powering a micro-frontend town: miniapps are the shops, shells are the centres, this is the wiring between. Build a feature once, power it everywhere.</p>
+      <div class="proj" style="--i:.15">
+        <h4>Major accomplishments</h4>
+        <ul>
+          <li><b>Optimized Innersource libraries</b> — bundle size down 90%, loads 3× faster</li>
+          <li><b>Miniapp generator</b> — setup time from 7 days to 30 minutes</li>
+          <li><b>Common libraries</b> — built and maintained for 150+ miniapps</li>
+          <li><b>Led React 18/19 migration</b> — 95% test coverage, zero-downtime deploys</li>
+          <li><b>Automation &amp; safety</b> — deploys 60% faster; AppDynamics, Splunk, LaunchDarkly, Snyk, SonarQube; mentoring across teams</li>
+        </ul>
+      </div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">React 18/19</span><span class="chip hot">TypeScript</span><span class="chip">micro-frontend</span><span class="chip">monorepo</span><span class="chip">Webpack</span><span class="chip">Jest</span><span class="chip">GraphQL</span></div></div>
+      <div class="company" style="--i:.25"><b>NAB Innovation Centre</b> · <span class="m">Big Four Bank</span> · $900B+ assets · 9M+ customers</div>
+    </div>
+  </div>
 </section>
 
-<!-- 6 · POCKET — miniapps everywhere -->
-<section class="slide" id="pocket" data-accent="#17BEBB" style="--accent:#17BEBB" aria-label="The Pocket — miniapps everywhere">
-  <div class="pg-kicker kicker">Page six · Build once, run everywhere</div>
-  <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn phone with three miniapp tiles and signal waves">
-    <g class="phone-bob">
-      <rect class="s d" pathLength="1" x="228" y="56" width="144" height="288" rx="26"/>
-      <path class="s d thin" pathLength="1" style="--dd:250ms" d="M272 74 H328"/>
-      <rect class="s d thin" pathLength="1" style="--dd:350ms" x="248" y="96" width="104" height="150" rx="10"/>
-      <g class="d" style="--dd:550ms">
-        <rect pathLength="1" class="s" x="258" y="110" width="40" height="40" rx="8"/>
-        <rect pathLength="1" class="s" x="306" y="110" width="40" height="40" rx="8"/>
-        <rect pathLength="1" class="s" x="258" y="158" width="40" height="40" rx="8"/>
-        <rect pathLength="1" class="s" x="306" y="158" width="40" height="40" rx="8"/>
-      </g>
-      <g class="f" style="--dd:1000ms">
-        <rect x="266" y="118" width="24" height="24" rx="5" class="acc-f" opacity=".85"/>
-        <circle cx="326" cy="130" r="11" class="acc-f" opacity=".55"/>
-        <rect x="266" y="166" width="24" height="24" rx="11" class="acc-f" opacity=".4"/>
-        <path d="M310 182 l10 -12 10 12 z" class="acc-f" opacity=".7"/>
-      </g>
-      <g class="s d thin" style="--dd:700ms"><path pathLength="1" class="s" d="M252 268 H348 M252 286 H348 M252 304 H320"/></g>
-      <circle class="s d" pathLength="1" style="--dd:800ms" cx="300" cy="326" r="9"/>
-    </g>
-    <path class="acc-s d sig" pathLength="1" style="--dd:1000ms" d="M418 120 a44 44 0 0 1 0 62"/>
-    <path class="acc-s d sig s2" pathLength="1" style="--dd:1150ms" d="M446 100 a76 76 0 0 1 0 102"/>
-  </svg>
-  <span class="cap f" style="--dd:1500ms"><em>150+ miniapps</em> · one grid · every shell — web + mobile</span>
-  <p class="narr f" style="--dd:1650ms">One hundred fifty small shops — payments, accounts, cards — running in every shell, on web and mobile alike. Build once; power it everywhere.</p>
-  <div class="pg-num">6 / 8</div>
+<!-- 6 · AI PROJECT -->
+<section class="page" id="ai" data-accent="#17BEBB" style="--accent:#17BEBB" aria-label="AI Code Review Assistant">
+  <div class="decor">
+    <svg class="glyph" style="right:9%;top:20%;--depth:58px;--dur:9.5s" width="30" height="30" viewBox="0 0 24 24"><rect x="5" y="7" width="14" height="10" rx="3" stroke="#17BEBB" stroke-width="2" fill="none"/><path d="M12 4v3M9 12h.01M15 12h.01M9.5 15h5" stroke="#17BEBB" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg class="glyph" style="left:8%;bottom:18%;--depth:72px;--dur:11s" width="26" height="26" viewBox="0 0 24 24"><path d="M9 4 4 6v5c0 4 2 7 5 8 3-1 5-4 5-8V6zM15 9l5 2v3c0 3-1.6 5-4 6" stroke="#8C8287" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="pg-head"><span class="kicker">Page six · AI innovation · the thinking machine</span><span class="dates">2024 · PERSONAL</span></div>
+  <div class="pg-body">
+    <div class="ill-col">
+      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn split-flap departures board reading WHERE NEXT">
+        <path class="s d" pathLength="1" d="M170 320 L150 366 M430 320 L450 366"/>
+        <rect class="ink-f f" x="84" y="70" width="432" height="252" rx="12"/>
+        <rect class="s d" pathLength="1" x="84" y="70" width="432" height="252" rx="12"/>
+        <path class="s d thin" pathLength="1" d="M84 108 H516"/>
+        <text class="f" x="104" y="98" font-family="Menlo,monospace" font-size="14" letter-spacing="3" fill="#F2EFE4">DEPARTURES</text>
+        <g class="f"><circle cx="480" cy="92" r="6" class="acc-f lampglow"/><circle cx="498" cy="92" r="6" fill="#4a463c"/></g>
+        <g font-family="Menlo,monospace" font-size="24" font-weight="700" text-anchor="middle" class="f">
+          <rect x="110" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="128" y="171" fill="#F2EFE4">W</text>
+          <rect x="152" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="170" y="171" fill="#F2EFE4">H</text>
+          <rect x="194" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="212" y="171" fill="#F2EFE4">E</text>
+          <rect x="236" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="254" y="171" fill="#F2EFE4">R</text>
+          <rect x="278" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="296" y="171" fill="#F2EFE4">E</text>
+          <rect x="322" y="140" width="36" height="44" rx="3" fill="#141412"/>
+          <rect x="364" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="382" y="171" fill="#F2EFE4">N</text>
+          <rect x="406" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="424" y="171" fill="#F2EFE4">E</text>
+          <rect x="448" y="140" width="36" height="44" rx="3" fill="#141412" class="flap-live"/><text x="466" y="171" fill="#F2EFE4">X</text>
+          <rect x="490" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="508" y="171" fill="#F2EFE4">T</text>
+        </g>
+        <g class="f" font-family="Menlo,monospace" font-size="13" fill="#B8B4A4">
+          <text x="110" y="230" fill="#FFC914" font-weight="700">BOARDING</text>
+          <text x="200" y="230">AI Code Review Assistant</text>
+          <text x="110" y="258">GATE      VS Code · provider-agnostic</text>
+          <text x="110" y="286">STATUS    live demo — inspect →</text>
+        </g>
+      </svg>
+    </div>
+    <div class="content-col">
+      <div class="roleicon" style="--i:0"><i>AI</i> Innovation project</div>
+      <h2 style="--i:.05">AI Code Review Assistant · <em>VS Code Extension</em></h2>
+      <p class="desc" style="--i:.1">A VS Code extension generating structured prompts for AI-powered code review — combining traditional developer tools with modern AI capabilities.</p>
+      <div class="proj" style="--i:.15">
+        <h4>What it does</h4>
+        <ul>
+          <li><b>Smart prompt generation</b> — structured prompts for automated code analysis</li>
+          <li><b>Structured results</b> — intelligent review reports, multiple review types</li>
+          <li><b>Provider-agnostic</b> — works with any AI service, no API key required</li>
+        </ul>
+      </div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">VS Code API</span><span class="chip hot">TypeScript</span><span class="chip">prompt engineering</span><span class="chip">AI integration</span></div></div>
+      <div style="--i:.25"><a class="chip hot" style="display:inline-block;text-decoration:none" href="https://vuquangkhtn.github.io/ai-code-review-assistant/" target="_blank" rel="noopener">LIVE DEMO → vuquangkhtn.github.io/ai-code-review-assistant</a></div>
+    </div>
+  </div>
 </section>
 
-<!-- 7 · PLATFORM — NAB report -->
-<section class="slide" id="platform" data-accent="#FFC914" style="--accent:#FFC914" aria-label="The Platform — NAB report">
-  <div class="pg-kicker kicker">Page seven · District report — NAB Core Platform</div>
-  <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn town of buildings on a power grid, windows lit">
-    <path class="s d" pathLength="1" d="M70 330 H530"/>
-    <g class="d" style="--dd:250ms">
-      <rect pathLength="1" class="s" x="90" y="200" width="70" height="130"/>
-      <rect pathLength="1" class="s" x="180" y="140" width="80" height="190"/>
-      <rect pathLength="1" class="s" x="280" y="220" width="64" height="110"/>
-      <rect pathLength="1" class="s" x="362" y="110" width="88" height="220"/>
-      <rect pathLength="1" class="s" x="466" y="180" width="62" height="150"/>
-    </g>
-    <path class="s d" pathLength="1" style="--dd:600ms" d="M160 200 q40 -34 92 -34 M260 152 q26 -18 44 -18 M450 130 q20 8 22 32"/>
-    <path class="acc-s flowline" pathLength="1" style="--dd:1200ms" d="M160 200 q40 -34 92 -34 M260 152 q26 -18 44 -18 M450 130 q20 8 22 32"/>
-    <g class="f" style="--dd:1000ms">
-      <rect x="102" y="216" width="12" height="14" class="acc-f win-lit"/><rect x="128" y="216" width="12" height="14" class="acc-f win-lit w2" opacity=".7"/>
-      <rect x="102" y="244" width="12" height="14" class="acc-f win-lit w3" opacity=".55"/>
-      <rect x="196" y="158" width="12" height="14" class="acc-f win-lit w2"/><rect x="224" y="158" width="12" height="14" class="acc-f win-lit" opacity=".7"/>
-      <rect x="196" y="188" width="12" height="14" class="acc-f win-lit w3" opacity=".6"/><rect x="252" y="188" width="12" height="14" class="acc-f win-lit" opacity=".8"/>
-      <rect x="294" y="238" width="12" height="14" class="acc-f win-lit w2" opacity=".75"/><rect x="320" y="238" width="12" height="14" class="acc-f win-lit" opacity=".6"/>
-      <rect x="378" y="128" width="12" height="14" class="acc-f win-lit"/><rect x="406" y="128" width="12" height="14" class="acc-f win-lit w3" opacity=".7"/>
-      <rect x="434" y="128" width="12" height="14" class="acc-f win-lit w2" opacity=".75"/><rect x="378" y="158" width="12" height="14" class="acc-f win-lit" opacity=".65"/>
-      <rect x="480" y="196" width="12" height="14" class="acc-f win-lit w2" opacity=".7"/><rect x="506" y="196" width="12" height="14" class="acc-f win-lit" opacity=".55"/>
-    </g>
-    <g class="d" style="--dd:800ms">
-      <rect pathLength="1" class="s" x="272" y="300" width="34" height="30"/>
-      <path pathLength="1" class="acc-s" d="M289 305 l-9 12 h8 l-6 11 14 -14 h-8 z"/>
-    </g>
-  </svg>
-  <span class="cap f" style="--dd:1500ms"><em>150+</em> shops powered · 90% bundle cut · setup 7d→30m · React 18/19 · 95%</span>
-  <p class="narr f" style="--dd:1650ms">Today I keep a small city of software running: one hundred fifty shops, one grid, every light on. Build a feature once, power it everywhere.</p>
-  <div class="pg-num">7 / 8</div>
+<!-- 7 · SKILLS -->
+<section class="page" id="skills" data-accent="#76B041" style="--accent:#76B041" aria-label="Technical skills">
+  <div class="decor">
+    <svg class="glyph" style="right:7%;top:18%;--depth:52px;--dur:9s" width="30" height="30" viewBox="0 0 24 24"><path d="M14 4l6 6-10 10H4v-6z" stroke="#76B041" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M12 6l6 6" stroke="#76B041" stroke-width="2"/></svg>
+    <svg class="glyph" style="left:6%;bottom:20%;--depth:64px;--dur:10s" width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke="#8C8287" stroke-width="2" fill="none"/><path d="M12 8v4l3 2" stroke="#8C8287" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg class="glyph" style="right:16%;bottom:14%;--depth:40px;--dur:8s" width="24" height="24" viewBox="0 0 24 24"><path d="M6 20 12 4l6 16M8.6 14h6.8" stroke="#5A5257" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </div>
+  <div class="pg-head"><span class="kicker">Page seven · The workbench drawer · full toolkit</span><span class="dates">ALWAYS SHARPENED</span></div>
+  <div class="pg-body" style="grid-template-columns:minmax(340px,7fr) minmax(300px,5fr)">
+    <div class="content-col" style="max-width:none">
+      <div class="roleicon" style="--i:0"><i>SKL</i> Technical skills</div>
+      <h2 style="--i:.05">The <em>workbench drawer</em></h2>
+      <p class="desc" style="--i:.1">Full-stack development expertise spanning modern JavaScript frameworks, backend systems, and DevOps tools — every tool below has shipped to production.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px">
+        <div class="stack" style="--i:.15"><h4>Languages</h4><div class="chips"><span class="chip hot">JavaScript</span><span class="chip hot">TypeScript</span><span class="chip">HTML5</span><span class="chip">CSS3</span></div></div>
+        <div class="stack" style="--i:.18"><h4>Frontend</h4><div class="chips"><span class="chip hot">React</span><span class="chip">Redux</span><span class="chip">Next.js</span><span class="chip">Webpack</span><span class="chip">Babel</span><span class="chip">Jest</span><span class="chip">RTL</span></div></div>
+        <div class="stack" style="--i:.21"><h4>Backend</h4><div class="chips"><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">PostgreSQL</span><span class="chip">Prisma</span><span class="chip">GraphQL</span></div></div>
+        <div class="stack" style="--i:.24"><h4>Tools &amp; DevOps</h4><div class="chips"><span class="chip">Git</span><span class="chip">Docker</span><span class="chip">Jenkins</span><span class="chip">Harness</span><span class="chip">Jira</span><span class="chip">Confluence</span></div></div>
+      </div>
+    </div>
+    <div class="ill-col">
+      <svg class="ill" viewBox="0 0 500 500" role="img" aria-label="A hand-drawn open toolbox with tools fanned out">
+        <path class="s d" pathLength="1" d="M90 220 H410 V400 Q410 420 390 420 H110 Q90 420 90 400 Z"/>
+        <path class="s d" pathLength="1" d="M90 220 L120 160 H380 L410 220 M110 160 Q250 110 390 160"/>
+        <path class="acc-s d" pathLength="1" d="M170 160 Q250 130 330 160"/>
+        <g class="d"><path pathLength="1" class="s" d="M140 300 l24 -60 24 60"/><circle pathLength="1" class="s" cx="164" cy="246" r="9"/></g>
+        <g class="d"><rect pathLength="1" class="s" x="230" y="250" width="60" height="16" rx="8"/><rect pathLength="1" class="s" x="252" y="266" width="16" height="44"/></g>
+        <g class="d"><path pathLength="1" class="s" d="M330 310 l0 -54 m-12 12 l24 0"/></g>
+        <g class="f"><circle cx="164" cy="230" r="5" class="acc-f"/><rect x="248" y="244" width="8" height="8" class="acc-f" opacity=".8"/></g>
+        <g class="d thin"><path pathLength="1" class="s" d="M120 350 H400 M120 378 H360"/></g>
+      </svg>
+    </div>
+  </div>
 </section>
 
-<!-- 8 · HORIZON — AI, skills, contact -->
-<section class="slide" id="horizon" data-accent="#FFC914" style="--accent:#FFC914" aria-label="The Horizon — AI, skills, contact">
-  <div class="pg-kicker kicker">Page eight · Next departures</div>
-  <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn split-flap departures board on legs, reading WHERE NEXT">
-    <path class="s d" pathLength="1" d="M170 320 L150 366 M430 320 L450 366"/>
-    <rect class="ink-f f" style="--dd:500ms" x="84" y="70" width="432" height="252" rx="12"/>
-    <rect class="s d" pathLength="1" x="84" y="70" width="432" height="252" rx="12"/>
-    <path class="s d thin" pathLength="1" style="--dd:400ms" d="M84 108 H516"/>
-    <text class="f" style="--dd:900ms" x="104" y="98" font-family="Menlo,monospace" font-size="14" letter-spacing="3" fill="#F2EFE4">DEPARTURES</text>
-    <g class="f" style="--dd:1150ms">
-      <circle cx="480" cy="92" r="6" class="acc-f lampglow"/><circle cx="498" cy="92" r="6" fill="#4a463c"/>
-    </g>
-    <g font-family="Menlo,monospace" font-size="24" font-weight="700" text-anchor="middle">
-      <g class="f" style="--dd:1250ms">
-        <rect x="110" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="128" y="171" fill="#F2EFE4">W</text>
-        <rect x="152" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="170" y="171" fill="#F2EFE4">H</text>
-        <rect x="194" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="212" y="171" fill="#F2EFE4">E</text>
-        <rect x="236" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="254" y="171" fill="#F2EFE4">R</text>
-        <rect x="278" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="296" y="171" fill="#F2EFE4">E</text>
-        <rect x="322" y="140" width="36" height="44" rx="3" fill="#141412"/>
-        <rect x="364" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="382" y="171" fill="#F2EFE4">N</text>
-        <rect x="406" y="140" width="36" height="44" rx="3" fill="#141412"/><text x="424" y="171" fill="#F2EFE4">E</text>
-        <rect x="448" y="140" width="36" height="44" rx="3" fill="#141412" class="flap-live"/><text x="466" y="171" fill="#F2EFE4">X</text>
-      </g>
-    </g>
-    <g class="f" style="--dd:1400ms" font-family="Menlo,monospace" font-size="13.5" fill="#B8B4A4">
-      <text x="110" y="228" fill="#FFC914" font-weight="700">BOARDING</text><text x="110" y="228" dx="0" dy="0"></text>
-      <text x="200" y="228">AI Code Review Assistant · VS Code · provider-agnostic</text>
-      <text x="110" y="256">DESK      vuquangkhtn@gmail.com · github · linkedin · HCMC</text>
-      <text x="110" y="284">OPEN      collaboration &amp; interesting problems — always</text>
-    </g>
-    <g class="f" style="--dd:1500ms" font-family="Menlo,monospace" font-size="10.5" fill="#6a675c">
-      <text x="110" y="308">TS · React · Redux · Next · Node · GraphQL · Postgres · Jest · Docker · mfe · monorepo</text>
-    </g>
-  </svg>
-  <p class="narr f" style="--dd:1650ms">And now the machine has begun to think along with us — I review code with it. The board is lit; the next departure is yours to call.</p>
-  <div class="pg-num">8 / 8</div>
+<!-- 8 · CONTACT -->
+<section class="page" id="contact" data-accent="#E4572E" style="--accent:#E4572E" aria-label="Contact">
+  <div class="decor">
+    <svg class="glyph" style="right:8%;top:20%;--depth:60px;--dur:10s" width="28" height="28" viewBox="0 0 24 24"><path d="M3 6l9 7 9-7M3 6h18v12H3z" stroke="#E4572E" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+    <svg class="glyph" style="left:7%;bottom:18%;--depth:48px;--dur:8.8s" width="26" height="26" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#8C8287" stroke-width="2" fill="none"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" stroke="#8C8287" stroke-width="1.6" fill="none"/></svg>
+  </div>
+  <div class="pg-head"><span class="kicker">Page eight · The departures desk</span><span class="dates">TODAY · OPEN</span></div>
+  <div class="pg-body" style="grid-template-columns:1fr;justify-items:center">
+    <div class="content-col" style="max-width:860px;text-align:center">
+      <div class="roleicon" style="--i:0;justify-content:center"><i>CTC</i> Ready to collaborate</div>
+      <h2 style="--i:.05">Ready to collaborate on <em>your next project?</em></h2>
+      <p class="desc" style="--i:.1">Today I continue to grow as an engineer — building scalable solutions, mentoring teams, exploring new technology. The next departure is yours to call.</p>
+      <div class="cards" style="--i:.15">
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 6l9 7 9-7M3 6h18v12H3z"/></svg></div>
+          <h5>Email</h5><a href="mailto:vuquangkhtn@gmail.com">vuquangkhtn@gmail.com</a>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M9 19c-4 1.5-4-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></div>
+          <h5>GitHub</h5><a href="https://github.com/vuquangkhtn/" target="_blank" rel="noopener">github.com/vuquangkhtn</a>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 9v6h4l5 4V5l-5 4zM16 9a4 4 0 0 1 0 6"/></svg></div>
+          <h5>LinkedIn</h5><a href="https://www.linkedin.com/in/ngvuquang" target="_blank" rel="noopener">linkedin.com/in/ngvuquang</a>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+          <h5>Location</h5><p>Ho Chi Minh City, Vietnam</p>
+        </div>
+      </div>
+      <p class="narr" style="--i:.2;margin:26px auto 0">End of file · QVN · nine pages, one journey · the machines were only the scenery.</p>
+    </div>
+  </div>
 </section>
 
 <nav id="rail" aria-label="Pages"><div class="rail-line"><div class="rail-fill"></div></div><div class="ticks"></div></nav>
-<div id="ctrls"><button type="button" id="prev" aria-label="Previous page">◀</button><button type="button" id="next" aria-label="Next page">▶</button></div>
-<div id="announcer" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></div>
+<div id="ctrls"><button type="button" id="prev" aria-label="Previous page">▲</button><button type="button" id="next" aria-label="Next page">▼</button></div>
+<div id="announcer" aria-live="polite" style="position:fixed;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></div>
 </div>
 
 <script>
 (function(){
   var deck=document.getElementById('story-deck');
-  var slides=[].slice.call(deck.querySelectorAll('.slide'));
-  var names=['Cover','Loom','Machine','Terminal','Home','Web','Pocket','Platform','Horizon'];
-  var ticksWrap=deck.querySelector('.ticks'), fill=deck.querySelector('.rail-fill'),
+  var pages=[].slice.call(document.querySelectorAll('.page'));
+  var names=['Cover','Study','VNG','KMS','Codelink','NAB','AI','Skills','Contact'];
+  var ticksWrap=document.querySelector('#rail .ticks'), fill=document.querySelector('#rail .rail-fill'),
       rail=document.getElementById('rail'), announcer=document.getElementById('announcer');
-  var cur=0, lock=false;
   var rm=window.matchMedia('(prefers-reduced-motion: reduce)');
   var reduced=rm.matches;
-  rm.addEventListener&&rm.addEventListener('change',function(e){reduced=e.matches});
 
   names.forEach(function(n,i){
     var b=document.createElement('button');
     b.type='button'; b.setAttribute('aria-label','Go to '+n);
     b.innerHTML='<i class="dot"></i><span class="tlabel">'+n+'</span>';
-    b.addEventListener('click',function(){go(i)});
+    b.addEventListener('click',function(){pages[i].scrollIntoView({behavior:reduced?'auto':'smooth'})});
     ticksWrap.appendChild(b);
   });
   var ticks=[].slice.call(ticksWrap.children);
 
-  function swap(next){
-    slides[cur].classList.remove('active'); slides[cur].classList.add('exit');
-    var prev=slides[cur];
-    setTimeout(function(){prev.classList.remove('exit')},1000);
-    cur=next;
-    slides[cur].classList.remove('exit');
-    slides[cur].classList.add('active');
-    var acc=slides[cur].getAttribute('data-accent')||'#E4572E';
-    deck.style.setProperty('--accent',acc); rail.style.setProperty('--accent',acc);
-    ticks.forEach(function(t,i){t.classList.toggle('on',i===cur);t.setAttribute('aria-current',i===cur?'true':'false')});
-    fill.style.width=(cur/(slides.length-1)*100)+'%';
-    announcer.textContent='Page '+(cur+1)+' of '+slides.length+': '+names[cur];
-    try{history.replaceState(null,'','#'+slides[cur].id)}catch(e){}
+  /* continuous scroll-driven progress: every frame, every page gets --p */
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var vh=innerHeight, cur=0, best=1e9;
+    for(var i=0;i<pages.length;i++){
+      var r=pages[i].getBoundingClientRect();
+      var p=(vh*0.9-r.top)/(vh*0.65);
+      p=Math.max(0,Math.min(1,p));
+      pages[i].style.setProperty('--p',p.toFixed(3));
+      var mid=Math.abs(r.top+r.height/2-vh/2);
+      if(mid<best){best=mid;cur=i}
+    }
+    var sy=scrollY||document.documentElement.scrollTop;
+    var max=document.documentElement.scrollHeight-vh;
+    fill.style.width=(max>0?sy/max*100:0)+'%';
+    if(!pages[cur].dataset.accentSeen){
+      ticks.forEach(function(t,i){t.classList.toggle('on',i===cur);t.setAttribute('aria-current',i===cur?'true':'false')});
+      var acc=pages[cur].getAttribute('data-accent')||'#E4572E';
+      deck.style.setProperty('--accent',acc);rail.style.setProperty('--accent',acc);
+      announcer.textContent='Page '+(cur+1)+' of '+pages.length+': '+names[cur];
+    }
+    ticks.forEach(function(t,i){t.classList.toggle('on',i===cur)});
   }
-  function go(next){
-    if(lock||next<0||next>=slides.length||next===cur) return;
-    if(reduced){ swap(next); return; }
-    lock=true; swap(next);
-    setTimeout(function(){lock=false},950);
-  }
-  var wheelAcc=0, wheelT=0;
-  deck.addEventListener('wheel',function(e){
-    e.preventDefault();
-    var now=Date.now(); if(now-wheelT>420) wheelAcc=0; wheelT=now;
-    wheelAcc+=e.deltaY;
-    if(wheelAcc>110){wheelAcc=0;go(cur+1)} else if(wheelAcc<-110){wheelAcc=0;go(cur-1)}
-  },{passive:false});
-  document.addEventListener('keydown',function(e){
-    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(cur+1)}
-    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
-    else if(e.key==='Home'){go(0)} else if(e.key==='End'){go(slides.length-1)}
-  });
-  var tx=0,ty=0;
-  deck.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
-  deck.addEventListener('touchend',function(e){
-    var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
-    if(Math.max(Math.abs(dx),Math.abs(dy))<46) return;
-    if(Math.abs(dx)>Math.abs(dy)) go(cur+(dx<0?1:-1)); else go(cur+(dy<0?1:-1));
-  },{passive:true});
-  document.getElementById('prev').addEventListener('click',function(){go(cur-1)});
-  document.getElementById('next').addEventListener('click',function(){go(cur+1)});
-  var h=location.hash.replace('#','');
-  var ix=slides.findIndex(function(s){return s.id===h});
-  if(ix>0){ slides[0].classList.remove('active'); cur=ix-1; swap(ix); } else { swap(0); }
+  function onScroll(){ if(!ticking){ticking=true;requestAnimationFrame(update)} }
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',onScroll);
+  document.getElementById('prev').addEventListener('click',function(){
+    var vh=innerHeight,i=Math.round(scrollY/vh);pages[Math.max(0,i-1)].scrollIntoView({behavior:reduced?'auto':'smooth'})});
+  document.getElementById('next').addEventListener('click',function(){
+    var vh=innerHeight,i=Math.round(scrollY/vh);pages[Math.min(pages.length-1,i+1)].scrollIntoView({behavior:reduced?'auto':'smooth'})});
+  if(location.hash){var t=document.getElementById(location.hash.slice(1));if(t)setTimeout(function(){t.scrollIntoView()},60)}
+  update();
 })();
 </script>
 <!--FRAG-END-->
