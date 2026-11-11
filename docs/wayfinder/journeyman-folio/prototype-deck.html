@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>P2 v4 — The Journeyman's File · scroll-driven storybook (current-portfolio content)</title>
+<title>P2 v5 — The Journeyman's File · real imagery edition</title>
 <style>
 /* ===== v4 — paper storybook, SCROLL-DRIVEN: draw-on + parallax track scroll
        continuously; ambient loops never pause. Content = current portfolio, verbatim-ish. ===== */
@@ -23,7 +23,7 @@ body{background:var(--paper)}
 .page{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;
   padding:max(34px,env(safe-area-inset-top)) clamp(18px,6vw,84px) 64px;overflow:hidden;
   border-bottom:1.5px dashed rgba(46,40,42,.18)}
-.pg-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:18px}
+.pg-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px 14px;flex-wrap:wrap;margin-bottom:18px}
 .dates{font:700 12px/1 Menlo,monospace;letter-spacing:.1em;color:var(--paper);background:var(--accent,var(--verm));
   padding:6px 12px;border:2px solid var(--ink);border-radius:3px;box-shadow:3px 3px 0 rgba(46,40,42,.2);white-space:nowrap;transform:rotate(-1.2deg)}
 .pg-body{display:grid;grid-template-columns:minmax(300px,5fr) minmax(340px,7fr);gap:clamp(20px,4vw,56px);align-items:center}
@@ -64,6 +64,25 @@ body{background:var(--paper)}
 /* content column */
 .content-col{max-width:640px}
 .content-col>*{opacity:clamp(0,calc((var(--p,0) - var(--i,0)) * 3.2),1);transform:translateY(calc((1 - clamp(0,(var(--p,0) - var(--i,0)) * 3.2,1)) * 22px))}
+/* real-photo figures (external sample imagery) + drawn fallback */
+.photo{position:relative;border:2.5px solid var(--ink);border-radius:6px;overflow:hidden;background:rgba(255,255,255,.5);
+  box-shadow:7px 8px 0 rgba(46,40,42,.14);margin:0}
+.photo::before{content:"";display:block;padding-top:62%}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s ease;
+  filter:grayscale(1) sepia(.28) contrast(1.04) brightness(1.02)}
+.photo .wash{position:absolute;inset:0;background:var(--accent,var(--verm));opacity:.14;mix-blend-mode:multiply;pointer-events:none}
+.photo figcaption{position:absolute;left:0;right:0;bottom:0;background:rgba(247,243,232,.92);border-top:1.5px solid rgba(46,40,42,.3);
+  font:700 9.5px/1.5 Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);padding:6px 10px;text-align:center}
+.photo.done img{opacity:1}
+.photo.loading{border-style:dashed;animation:borderpulse 1.4s ease-in-out infinite}
+@keyframes borderpulse{50%{border-color:var(--ink3)}}
+.photo.done + .fb,.photo.done~.fb{display:none}
+.chip img{width:13px;height:13px;display:inline-block;vertical-align:-2px;margin-right:6px}
+.logowall{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center}
+.logowall .lg{display:flex;flex-direction:column;align-items:center;gap:7px;width:86px}
+.logowall img{width:38px;height:38px;transition:transform .4s var(--spring)}
+.logowall .lg:hover img{transform:translateY(-5px) rotate(-6deg)}
+.logowall span{font:700 9px/1.2 Menlo,monospace;letter-spacing:.06em;color:var(--ink2);text-align:center}
 .roleicon{display:inline-flex;align-items:center;gap:8px;font:700 10.5px/1 Menlo,monospace;letter-spacing:.16em;color:var(--ink2);margin-bottom:8px}
 .roleicon i{width:26px;height:26px;border:2px solid var(--ink);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:9px;color:var(--paper);background:var(--accent,var(--verm))}
 h2{font:700 clamp(24px,3vw,34px)/1.15 Georgia,serif;letter-spacing:-.015em}
@@ -77,9 +96,11 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
 .stack{margin-bottom:12px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1.5px solid var(--ink);border-radius:20px;padding:5px 12px;font:700 11px/1 Menlo,monospace;letter-spacing:.04em;background:rgba(255,255,255,.45);transition:transform .4s var(--spring),background .3s}
-.chip:hover{transform:translateY(-3px) rotate(-2deg);background:var(--accent,var(--verm));color:var(--paper)}
 .chip.hot{border-color:var(--accent,var(--verm));color:var(--accent,var(--verm))}
-.chip.hot:hover{color:var(--paper)}
+@media (hover:hover){
+  .chip:hover{transform:translateY(-3px) rotate(-2deg);background:var(--accent,var(--verm));color:var(--paper)}
+  .chip.hot:hover{color:var(--paper)}
+  }
 .company{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;border:1.5px solid rgba(46,40,42,.35);border-radius:8px;padding:8px 14px;font:700 10.5px/1.6 Menlo,monospace;letter-spacing:.06em;color:var(--ink2);background:rgba(255,255,255,.3)}
 .company b{color:var(--ink)}
 .company .m{color:var(--accent,var(--verm))}
@@ -116,7 +137,6 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:6px}
 .card{border:2px solid var(--ink);border-radius:10px;padding:16px 18px;background:rgba(255,255,255,.4);
   box-shadow:4px 4px 0 rgba(46,40,42,.16);transition:transform .4s var(--spring)}
-.card:hover{transform:translateY(-4px) rotate(-.6deg)}
 .card .ic{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;margin-bottom:10px;background:var(--accent,var(--verm))}
 .card .ic svg{width:20px;height:20px;stroke:var(--paper);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .card h5{font:700 12px/1 "Gill Sans","Trebuchet MS",sans-serif;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
@@ -130,6 +150,8 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
   .glyph{transform:none}
 }
 @media (max-width:880px){
+  .decor{display:none}
+  .skillsgrid{grid-template-columns:1fr!important}
   .pg-body{grid-template-columns:1fr;gap:14px}
   .ill{max-height:34vh;margin:0 auto}
   .page{padding-bottom:84px}
@@ -173,7 +195,8 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
   <div class="pg-head"><span class="kicker">Page one · Foundations · the pattern sheet</span><span class="dates">2014 – 2018</span></div>
   <div class="pg-body">
     <div class="ill-col">
-      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn Jacquard loom weaving a patterned cloth">
+      <figure class="photo loading" data-wiki="Jacquard machine" role="img" aria-label="A woven portrait of Jacquard"><img alt="" loading="lazy"><div class="wash"></div><figcaption>A woven portrait of Jacquard · the pattern IS the program · Wikimedia</figcaption></figure>
+      <svg class="ill fb" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn Jacquard loom weaving a patterned cloth">
         <path class="s d" pathLength="1" d="M80 40 H520 M80 40 V360 M520 40 V360 M80 360 H520"/>
         <path class="s d thin" pathLength="1" d="M80 130 H520 M80 250 H520"/>
         <g class="d thin"><path pathLength="1" class="s" d="M150 40 V250 M180 40 V250 M210 40 V250 M240 40 V250 M270 40 V250 M300 40 V250 M330 40 V250 M360 40 V250 M390 40 V250 M420 40 V250 M450 40 V250"/></g>
@@ -210,7 +233,8 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
   <div class="pg-head"><span class="kicker">Page two · First program · the machine age</span><span class="dates">OCT 2017 – JUL 2018</span></div>
   <div class="pg-body">
     <div class="ill-col">
-      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn vacuum-tube computer with a punch card feeding in">
+      <figure class="photo loading" data-wiki="ENIAC" role="img" aria-label="ENIAC"><img alt="" loading="lazy"><div class="wash"></div><figcaption>ENIAC · the tube machine · Wikimedia</figcaption></figure>
+      <svg class="ill fb" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn vacuum-tube computer with a punch card feeding in">
         <rect class="s d" pathLength="1" x="120" y="150" width="340" height="170" rx="14"/>
         <path class="s d thin" pathLength="1" d="M120 225 H460"/>
         <g class="d"><circle pathLength="1" class="s" cx="185" cy="270" r="14"/><path class="s" pathLength="1" d="M185 270 L192 262"/><circle pathLength="1" class="s" cx="245" cy="270" r="14"/><path class="s" pathLength="1" d="M245 270 L238 262"/><circle pathLength="1" class="s" cx="305" cy="270" r="14"/><path class="s" pathLength="1" d="M305 270 L312 262"/></g>
@@ -233,7 +257,7 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
           <li><b>TalkTV</b> — live stream application with advanced donating and chatting features</li>
         </ul>
       </div>
-      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">React Native</span><span class="chip">JavaScript</span><span class="chip">live streaming</span><span class="chip">mobile</span></div></div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/react.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/javascript.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip">live streaming</span><span class="chip">mobile</span></div></div>
       <div class="company" style="--i:.25"><b>VNG Corporation</b> · <span class="m">Vietnam's First Unicorn</span> · $1B+ valuation · 100M+ Zalo users</div>
     </div>
   </div>
@@ -248,7 +272,8 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
   <div class="pg-head"><span class="kicker">Page three · The conversation · the terminal</span><span class="dates">OCT 2018 – AUG 2019</span></div>
   <div class="pg-body">
     <div class="ill-col">
-      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn CRT terminal on a desk with a blinking session">
+      <figure class="photo loading" data-wiki="IBM 2741" role="img" aria-label="IBM 2741 terminal"><img alt="" loading="lazy"><div class="wash"></div><figcaption>IBM 2741 terminal · the conversation era · Wikimedia</figcaption></figure>
+      <svg class="ill fb" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn CRT terminal on a desk with a blinking session">
         <path class="s d" pathLength="1" d="M90 344 H510"/>
         <rect class="s d" pathLength="1" x="168" y="84" width="264" height="196" rx="18"/>
         <rect class="f" x="188" y="104" width="224" height="136" rx="8" fill="#101F1B"/>
@@ -276,7 +301,7 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
           <li><b>Learned</b> — Redux middlewares; shared state management between platforms</li>
         </ul>
       </div>
-      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">React</span><span class="chip hot">Redux</span><span class="chip">Angular</span><span class="chip">micro frontend</span></div></div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/react.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/redux.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/angular.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip">micro frontend</span></div></div>
       <div class="company" style="--i:.25"><b>KMS Technology</b> · <span class="m">Sao Khue Award Winner</span> · Fortune 1000 clients · 15+ years</div>
     </div>
   </div>
@@ -292,7 +317,8 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
   <div class="pg-head"><span class="kicker">Page four · The long bench · the home machine</span><span class="dates">AUG 2019 – AUG 2022</span></div>
   <div class="pg-body">
     <div class="ill-col">
-      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn home computer with cassette tape and pixel smiley">
+      <figure class="photo loading" data-wiki="Commodore 64" role="img" aria-label="Commodore 64"><img alt="" loading="lazy"><div class="wash"></div><figcaption>Commodore 64 · the machine came home · Wikimedia</figcaption></figure>
+      <svg class="ill fb" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn home computer with cassette tape and pixel smiley">
         <rect class="s d" pathLength="1" x="150" y="110" width="270" height="180" rx="12"/>
         <rect class="s d" pathLength="1" x="178" y="136" width="214" height="112" rx="6"/>
         <g class="f"><rect x="222" y="164" width="14" height="14" class="acc-f px-eye"/><rect x="334" y="164" width="14" height="14" class="acc-f"/><rect x="236" y="208" width="12" height="10" class="acc-f"/><rect x="250" y="218" width="12" height="10" class="acc-f"/><rect x="264" y="224" width="12" height="10" class="acc-f"/><rect x="278" y="218" width="12" height="10" class="acc-f"/><rect x="292" y="208" width="12" height="10" class="acc-f"/></g>
@@ -316,7 +342,7 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
           <li><b>Craft</b> — ES6→TypeScript, TDD by pair programming, React→Next migration</li>
         </ul>
       </div>
-      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">TypeScript</span><span class="chip hot">Next.js</span><span class="chip">ElasticSearch</span><span class="chip">Nuxeo</span><span class="chip">Socket.io</span><span class="chip">TDD</span><span class="chip">RTL</span></div></div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/typescript.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/nextdotjs.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/elasticsearch.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip">Nuxeo</span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/socketdotio.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip">TDD</span><span class="chip">RTL</span></div></div>
       <div class="company" style="--i:.25"><b>Codelink</b> · <span class="m">Agile Development Studio</span> · 70+ global clients · 95% retention</div>
     </div>
   </div>
@@ -331,7 +357,8 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
   <div class="pg-head"><span class="kicker">Page five · The platform years · the power grid</span><span class="dates">AUG 2022 – PRESENT</span></div>
   <div class="pg-body">
     <div class="ill-col">
-      <svg class="ill" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn town of buildings on a power grid, windows lit, one substation">
+      <figure class="photo loading" data-wiki="Data center" role="img" aria-label="A data center"><img alt="" loading="lazy"><div class="wash"></div><figcaption>A data center · today’s loom: one grid, every shop · Wikimedia</figcaption></figure>
+      <svg class="ill fb" viewBox="0 0 600 400" role="img" aria-label="A hand-drawn town of buildings on a power grid, windows lit, one substation">
         <path class="s d" pathLength="1" d="M70 330 H530"/>
         <g class="d"><rect pathLength="1" class="s" x="90" y="200" width="70" height="130"/><rect pathLength="1" class="s" x="180" y="140" width="80" height="190"/><rect pathLength="1" class="s" x="280" y="220" width="64" height="110"/><rect pathLength="1" class="s" x="362" y="110" width="88" height="220"/><rect pathLength="1" class="s" x="466" y="180" width="62" height="150"/></g>
         <path class="s d" pathLength="1" d="M160 200 q40 -34 92 -34 M260 152 q26 -18 44 -18 M450 130 q20 8 22 32"/>
@@ -360,7 +387,7 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
           <li><b>Automation &amp; safety</b> — deploys 60% faster; AppDynamics, Splunk, LaunchDarkly, Snyk, SonarQube; mentoring across teams</li>
         </ul>
       </div>
-      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">React 18/19</span><span class="chip hot">TypeScript</span><span class="chip">micro-frontend</span><span class="chip">monorepo</span><span class="chip">Webpack</span><span class="chip">Jest</span><span class="chip">GraphQL</span></div></div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/react.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/typescript.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip">micro-frontend</span><span class="chip">monorepo</span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/webpack.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/jest.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/graphql.svg" alt="" loading="lazy" onerror="this.remove()"></span></div></div>
       <div class="company" style="--i:.25"><b>NAB Innovation Centre</b> · <span class="m">Big Four Bank</span> · $900B+ assets · 9M+ customers</div>
     </div>
   </div>
@@ -414,7 +441,7 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
           <li><b>Provider-agnostic</b> — works with any AI service, no API key required</li>
         </ul>
       </div>
-      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot">VS Code API</span><span class="chip hot">TypeScript</span><span class="chip">prompt engineering</span><span class="chip">AI integration</span></div></div>
+      <div class="stack" style="--i:.2"><h4>Tech stack</h4><div class="chips"><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/visualstudiocode.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/typescript.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip">prompt engineering</span><span class="chip">AI integration</span></div></div>
       <div style="--i:.25"><a class="chip hot" style="display:inline-block;text-decoration:none" href="https://vuquangkhtn.github.io/ai-code-review-assistant/" target="_blank" rel="noopener">LIVE DEMO → vuquangkhtn.github.io/ai-code-review-assistant</a></div>
     </div>
   </div>
@@ -434,10 +461,10 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
       <h2 style="--i:.05">The <em>workbench drawer</em></h2>
       <p class="desc" style="--i:.1">Full-stack development expertise spanning modern JavaScript frameworks, backend systems, and DevOps tools — every tool below has shipped to production.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px">
-        <div class="stack" style="--i:.15"><h4>Languages</h4><div class="chips"><span class="chip hot">JavaScript</span><span class="chip hot">TypeScript</span><span class="chip">HTML5</span><span class="chip">CSS3</span></div></div>
-        <div class="stack" style="--i:.18"><h4>Frontend</h4><div class="chips"><span class="chip hot">React</span><span class="chip">Redux</span><span class="chip">Next.js</span><span class="chip">Webpack</span><span class="chip">Babel</span><span class="chip">Jest</span><span class="chip">RTL</span></div></div>
-        <div class="stack" style="--i:.21"><h4>Backend</h4><div class="chips"><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">PostgreSQL</span><span class="chip">Prisma</span><span class="chip">GraphQL</span></div></div>
-        <div class="stack" style="--i:.24"><h4>Tools &amp; DevOps</h4><div class="chips"><span class="chip">Git</span><span class="chip">Docker</span><span class="chip">Jenkins</span><span class="chip">Harness</span><span class="chip">Jira</span><span class="chip">Confluence</span></div></div>
+        <div class="stack" style="--i:.15"><h4>Languages</h4><div class="chips"><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/javascript.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/typescript.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/html5.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/css3.svg" alt="" loading="lazy" onerror="this.remove()"></span></div></div>
+        <div class="stack" style="--i:.18"><h4>Frontend</h4><div class="chips"><span class="chip hot"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/react.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/redux.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/nextdotjs.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/webpack.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/babel.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/jest.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip">RTL</span></div></div>
+        <div class="stack" style="--i:.21"><h4>Backend</h4><div class="chips"><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/nodedotjs.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/express.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/postgresql.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/prisma.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/graphql.svg" alt="" loading="lazy" onerror="this.remove()"></span></div></div>
+        <div class="stack" style="--i:.24"><h4>Tools &amp; DevOps</h4><div class="chips"><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/git.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/docker.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/jenkins.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip">Harness</span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/jira.svg" alt="" loading="lazy" onerror="this.remove()"></span><span class="chip"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/confluence.svg" alt="" loading="lazy" onerror="this.remove()"></span></div></div>
       </div>
     </div>
     <div class="ill-col">
@@ -545,6 +572,25 @@ h2 em{font-style:normal;color:var(--accent,var(--verm))}
     var vh=innerHeight,i=Math.round(scrollY/vh);pages[Math.max(0,i-1)].scrollIntoView({behavior:reduced?'auto':'smooth'})});
   document.getElementById('next').addEventListener('click',function(){
     var vh=innerHeight,i=Math.round(scrollY/vh);pages[Math.min(pages.length-1,i+1)].scrollIntoView({behavior:reduced?'auto':'smooth'})});
+
+  /* external sample imagery: Wikipedia lead photos, drawn svg as fallback */
+  var WIKI={education:'Jacquard machine',vng:'ENIAC',kms:'IBM 2741',codelink:'Commodore 64',nab:'Data center'};
+  var want=Object.keys(WIKI).map(function(k){return WIKI[k]});
+  try{
+    fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageimages&piprop=thumbnail&pithumbsize=900&titles='+encodeURIComponent(want.join('|')))
+      .then(function(r){return r.json()})
+      .then(function(d){
+        var byTitle={};
+        Object.keys(d.query.pages).forEach(function(pid){var pg=d.query.pages[pid];if(pg.thumbnail)byTitle[pg.title]=pg.thumbnail.source});
+        Object.keys(WIKI).forEach(function(id){
+          var u=byTitle[WIKI[id]],fig=document.querySelector('#'+id+' .photo');
+          if(!fig)return;
+          if(u){fig.querySelector('img').src=u;fig.querySelector('img').onload=function(){fig.classList.add('done');fig.classList.remove('loading')};}
+          else{fig.classList.remove('loading')}
+        });
+      }).catch(function(){document.querySelectorAll('.photo.loading').forEach(function(f){f.classList.remove('loading')})});
+  }catch(e){document.querySelectorAll('.photo.loading').forEach(function(f){f.classList.remove('loading')})}
+
   if(location.hash){var t=document.getElementById(location.hash.slice(1));if(t)setTimeout(function(){t.scrollIntoView()},60)}
   update();
 })();
