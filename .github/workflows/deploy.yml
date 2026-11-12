@@ -32,7 +32,17 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: '.'
+        # site content only — the whole-repo archive died on .claude/.zcode skill
+        # symlinks (absolute /Users/... paths, broken on the runner), and the
+        # internal agent config never belonged on the public site
+        path: |
+          index.html
+          icon.svg
+          background-icon.svg
+          assets
+          dist
+          docs
+          resumes
         
     - name: Deploy to GitHub Pages
       id: deployment
