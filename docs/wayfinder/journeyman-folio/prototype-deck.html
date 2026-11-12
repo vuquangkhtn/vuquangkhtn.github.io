@@ -162,6 +162,12 @@ html:not(.js) .squig path{stroke-dashoffset:0}
 .toy .seal i{font:700 .48rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;font-style:normal;
   max-width:74px}
 @keyframes sealslam{0%{opacity:0;transform:rotate(20deg) scale(2.4)}55%{opacity:1;transform:rotate(8deg) scale(.9)}100%{opacity:1;transform:rotate(8deg) scale(1)}}
+/* phones — the seal stamps the cloth itself: smaller, below the heading, so the h4 stays clear */
+@media (max-width:479px){
+  .toy .seal{top:46px;right:-6px;width:64px;height:64px}
+  .toy .seal b{font-size:1.2rem}
+  .toy .seal i{font-size:.42rem;max-width:52px}
+}
 /* II — one thread carried from bench to bench */
 .toy .threadsvg{position:absolute;left:18px;width:calc(100% - 36px);height:14px;overflow:visible}
 .toy .threadsvg path{stroke:var(--accent);stroke-width:2.5;fill:none;stroke-linecap:round;
@@ -218,10 +224,15 @@ html:not(.js) .squig path{stroke-dashoffset:0}
 .meter .mark{position:absolute;top:0;bottom:0;left:90%;width:3px;background:var(--ink)}
 .mrow{display:flex;align-items:center;gap:1em}
 .mrow output{font:700 1.3rem/1 var(--mono);color:var(--accent);min-width:4.2ch;font-variant-numeric:tabular-nums}
-input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:6px;border-radius:3px;background:var(--ink3);outline-offset:6px}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:26px;border-radius:3px;background:transparent;outline-offset:6px}
+input[type=range]::-webkit-slider-runnable-track{height:26px;border-radius:3px;
+  background:linear-gradient(var(--ink3),var(--ink3)) center/100% 6px no-repeat}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
-  background:var(--accent);border:2.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink);cursor:grab;transition:transform .3s var(--spring)}
+  background:var(--accent);border:2.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink);cursor:grab;transition:transform .3s var(--spring);
+  margin-top:2px}
 input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+input[type=range]::-moz-range-track{height:26px;border-radius:3px;
+  background:linear-gradient(var(--ink3),var(--ink3)) center/100% 6px no-repeat}
 input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);border:2.5px solid var(--ink);cursor:grab}
 
 /* IV — flag switches */
