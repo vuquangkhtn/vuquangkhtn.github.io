@@ -86,8 +86,9 @@ em.tl{font-style:normal;font-weight:700;color:var(--accent)}
 /* dictionary rows */
 .words{margin:2em 0 2.2em;border-top:2px solid var(--ink)}
 .words div{display:grid;grid-template-columns:9em 1fr;gap:0 1.2em;padding:.7em 0 .72em;
-  border-bottom:1.5px dotted var(--ink3);transition:background-color .5s var(--settle),padding .5s var(--spring)}
-.words div:hover{background:rgba(255,255,255,.65);padding-left:.6em}
+  border-bottom:1.5px dotted var(--ink3);transition:background-color .5s var(--settle)}
+.words div[hidden]{display:none}
+.words div:hover{background:rgba(255,255,255,.65)}
 .words dt{font:700 .78rem/1.6 var(--geo);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
 .words dd{margin:0;font-size:.9rem;line-height:1.55}
 .words dd .how{color:var(--ink3)}
@@ -107,6 +108,8 @@ em.tl{font-style:normal;font-weight:700;color:var(--accent)}
 .pull span+span{margin-left:1em}
 .squig{display:block;width:9.5em;height:10px;margin-top:.35em}
 .squig path{stroke:var(--accent);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+html:not(.js) .squig path{stroke-dashoffset:0}
+.js .drawn.in .squig path{animation:drawsq 1.1s var(--settle) .5s forwards}
 
 /* stats trays */
 .grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.8em,1fr));gap:10px;margin:2.2em 0}
@@ -126,10 +129,67 @@ em.tl{font-style:normal;font-weight:700;color:var(--accent)}
 .chip:hover img{filter:invert(1) brightness(1.6)}
 
 /* ── hero interactions, one per chapter ── */
-.toy{border:2px solid var(--ink);border-radius:8px;background:#fff;box-shadow:5px 5px 0 var(--accent);
+.toy{position:relative;border:2px solid var(--ink);border-radius:8px;background:#fff;box-shadow:5px 5px 0 var(--accent);
   padding:1em 1.1em .9em;margin:1.8em 0;transition:box-shadow .5s}
 .toy h4{font:700 .6rem/1 var(--geo);letter-spacing:.22em;text-transform:uppercase;margin:0 0 .8em;color:var(--ink2)}
 .toy .hand-hint{font-family:var(--hand);font-size:.95rem;color:var(--ink2);margin:.7em 0 0}
+
+/* completion — the record stamps itself, in the dateline's own idiom */
+.toy .stamp{display:inline-block;flex:none;font:700 .6rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:3px;padding:5px 9px;
+  box-shadow:2px 2px 0 var(--accent);transform:rotate(-1.6deg) scale(.6);opacity:0;
+  transition:opacity .35s var(--settle),transform .45s var(--spring)}
+.toy.done .stamp{opacity:1;transform:rotate(-1.6deg) scale(1)}
+.toy-result{font-family:var(--hand);font-size:.98rem;line-height:1.5;color:var(--ink);margin:.65em 0 0;
+  flex:1 1 22em;min-width:0;opacity:0;transform:translateY(7px);
+  transition:opacity .4s var(--settle) .18s,transform .4s var(--spring) .18s}
+.toy.done .toy-result{opacity:1;transform:none}
+.toyfoot{display:flex;align-items:baseline;gap:0 1em;flex-wrap:wrap;margin-top:.9em}
+.unpick{font:700 .62rem/1 var(--geo);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
+  border:0;border-bottom:2px dotted var(--ink3);background:none;color:var(--ink3);padding:.35em 0;margin-top:.8em}
+.unpick:hover{color:var(--accent);border-bottom-color:var(--accent)}
+@keyframes threadin{0%,100%{transform:scale(1)}45%{transform:scale(.86)}}
+
+/* celebrations — one earned set-piece per machine, drawn from the page's own materials */
+.cheer{position:absolute;inset:0;pointer-events:none;z-index:5}
+/* I — the woven cloth earns its seal */
+.toy .seal{position:absolute;top:-14px;right:10px;display:grid;place-items:center;gap:4px;width:96px;height:96px;
+  border:3px solid var(--accent);border-radius:50%;background:rgba(255,255,255,.95);color:var(--accent);
+  box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 5px var(--accent),4px 4px 0 rgba(46,40,42,.15);
+  transform:rotate(20deg) scale(2.4);opacity:0;text-align:center;
+  animation:sealslam .7s var(--spring) .85s forwards}
+.toy .seal b{font:700 1.8rem/1 var(--geo);letter-spacing:-.02em}
+.toy .seal i{font:700 .48rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;font-style:normal;
+  max-width:74px}
+@keyframes sealslam{0%{opacity:0;transform:rotate(20deg) scale(2.4)}55%{opacity:1;transform:rotate(8deg) scale(.9)}100%{opacity:1;transform:rotate(8deg) scale(1)}}
+/* II — one thread carried from bench to bench */
+.toy .threadsvg{position:absolute;left:18px;width:calc(100% - 36px);height:14px;overflow:visible}
+.toy .threadsvg path{stroke:var(--accent);stroke-width:2.5;fill:none;stroke-linecap:round;
+  stroke-dasharray:1;stroke-dashoffset:1;animation:drawsq .9s var(--settle) .3s forwards}
+.toy.cheer-thread .tabs button{animation:leap .55s var(--spring) both}
+.toy.cheer-thread .tabs button:nth-child(2){animation-delay:.12s}
+@keyframes leap{0%,100%{transform:none}40%{transform:translateY(-7px) rotate(-2deg)}}
+/* III — the coverage bar throws its stripes */
+.toy .dash{position:absolute;width:11px;height:4px;border-radius:2px;background:var(--accent);opacity:0;
+  animation:burst 1s var(--settle) var(--d,0ms) forwards}
+@keyframes burst{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:1}70%{opacity:1}
+  100%{opacity:0;transform:translate(var(--dx,40px),var(--dy,-60px)) rotate(var(--dr,90deg))}}
+/* IV — the town's lights come back on */
+.toy .wire{position:absolute;left:4%;right:4%;bottom:10px;border-top:2px dotted var(--ink3);opacity:.7}
+.toy .bulb{position:absolute;bottom:5px;left:calc(4.5% + var(--i)*8%);width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:2px solid var(--ink);opacity:0;
+  animation:bulbon .5s var(--spring) forwards;animation-delay:calc(.2s + var(--i)*.085s)}
+@keyframes bulbon{0%{opacity:0;transform:scale(.3)}55%{opacity:1;transform:scale(1.35);background:var(--sun)}
+  100%{opacity:1;transform:scale(1);background:var(--accent)}}
+/* V — the verdict is stamped onto the record */
+.toy .shipline{position:absolute;left:50%;top:56%;translate:-50% -50%;
+  font:700 1.35rem/1 var(--geo);letter-spacing:.22em;text-transform:uppercase;color:var(--accent);
+  background:rgba(255,255,255,.95);border:3px solid var(--accent);border-radius:5px;padding:.5em .7em .5em .9em;
+  box-shadow:inset 0 0 0 2.5px #fff,inset 0 0 0 5px var(--accent);
+  opacity:0;transform:rotate(9deg) scale(2.4);
+  animation:stampslam .6s var(--spring) .25s forwards}
+@keyframes stampslam{0%{opacity:0;transform:rotate(9deg) scale(2.4)}55%{opacity:1;transform:rotate(-6deg) scale(.94)}
+  100%{opacity:1;transform:rotate(-6deg) scale(1)}}
 
 /* I — weave grid */
 .weave{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;max-width:330px}
@@ -138,6 +198,10 @@ em.tl{font-style:normal;font-weight:700;color:var(--accent)}
 .weave button[aria-pressed="true"]{background:var(--accent);box-shadow:inset 0 0 0 2px rgba(255,255,255,.5)}
 .weave button:hover{transform:translateY(-2px)}
 .weave button:active{transform:translateY(1px)}
+/* a finished row is set into the cloth — ink, with the paper thread through it */
+.weave button:disabled,.weave button:disabled:hover,.weave button:disabled:active{
+  background:var(--ink);cursor:default;transform:none;box-shadow:none;display:grid;place-items:center}
+.weave button:disabled::after{content:"";width:62%;height:2.5px;border-radius:2px;background:var(--paper);opacity:.9}
 
 /* II — bench tabs */
 .tabs{display:flex;gap:8px;margin-bottom:.2em}
@@ -218,6 +282,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   .js .sec .dateline{opacity:1;transform:rotate(-1.4deg)}
   .js .sec .chip{opacity:1}
   .squig path{stroke-dashoffset:0!important;animation:none!important}
+  /* celebrations settle into their final frame, no motion */
+  .toy .seal{opacity:1;transform:rotate(8deg);animation:none!important}
+  .toy .shipline{opacity:1;transform:rotate(-6deg);animation:none!important}
+  .toy .bulb{opacity:1;transform:none;background:var(--accent);animation:none!important}
+  .toy .dash{animation:none!important}
 }
 </style>
 </head>
@@ -251,9 +320,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div data-anim style="--i:4"><dt>Scholarships</dt><dd>Study Promotion, yearly · <span class="how">four years running</span></dd></div>
       </div>
       <div class="toy" data-anim style="--i:5">
-        <h4>Interlude · weave your own pattern</h4>
-        <div class="weave" role="group" aria-label="Weave grid — press tiles to thread them"></div>
-        <p class="hand-hint">Press a tile to run a thread through it. Patterns are just decisions, repeated.</p>
+        <h4>Interlude · weave the pattern sheet</h4>
+        <div class="weave" role="group" aria-label="Weave grid — fill a row to raise a stripe; four stripes make the cloth"></div>
+        <button type="button" class="unpick" id="unpick" hidden>Unpick and weave again</button>
+        <p class="hand-hint">Press a tile to run a thread. Fill a row to raise a stripe — four stripes, four scholarship years, one whole cloth.</p>
+        <div class="toyfoot" hidden><span class="stamp">pattern held</span><p class="toy-result">Four stripes, four years — the Study Promotion Scholarship, received every single year of the record.</p></div>
       </div>
       <aside class="note"><b>On the record</b><span class="m">Top University</span> · Top 3 in Vietnam · 50,000+ students. The pattern sheet was cut from good cloth.</aside>
     </div>
@@ -279,6 +350,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <div data-b="kms" hidden><dt>ERTPM Tool</dt><dd>Agile process management website, micro frontend architecture</dd></div>
           <div data-b="kms" hidden><dt>Learned</dt><dd>Redux middlewares, shared state between platforms</dd></div>
         </div>
+        <p class="hand-hint">Serve both benches to close the apprenticeship.</p>
+        <div class="toyfoot" hidden><span class="stamp">two benches</span><p class="toy-result">Both benches served — one state, carried cleanly from the mobile loom to the web frame.</p></div>
       </div>
       <aside class="note"><b>The benches</b>VNG Education · Oct 2017 – Jul 2018 — <span class="m">Vietnam's first unicorn</span> behind it. KMS Technology · Oct 2018 – Aug 2019 — <span class="m">Sao Khue Award</span> winner, Fortune 1000 clients.</aside>
     </div>
@@ -304,11 +377,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="toy rv-none" data-anim style="--i:4">
         <h4>Interlude · the coverage bar</h4>
         <div class="mrow">
-          <input type="range" id="cov" min="0" max="100" value="90" step="1" aria-label="Test coverage, percent — drag to feel the bar">
-          <output id="covout" for="cov">90%</output>
+          <input type="range" id="cov" min="0" max="100" value="40" step="1" aria-label="Test coverage, percent — drag up to the 90 percent mark">
+          <output id="covout" for="cov">40%</output>
         </div>
         <div class="meter" aria-hidden="true"><i id="covfill"></i><span class="mark"></span></div>
-        <p class="hand-hint">Drag it. The medical platform lived past the mark — 90% and holding.</p>
+        <p class="hand-hint">Drag it up to the mark — the medical platform lived past 90%, and held there for three years.</p>
+        <div class="toyfoot" hidden><span class="stamp">bar met</span><p class="toy-result">Ninety percent and holding — the medical platform's standard, three years green.</p></div>
       </div>
       <div class="chips">
         <span class="chip" data-anim style="--i:0"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/typescript.svg" alt="" loading="lazy" onerror="this.remove()">TypeScript</span>
@@ -341,7 +415,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <label class="flag"><span class="sw"><input type="checkbox" checked data-flag="LaunchDarkly — rolling features, A/B by flag"><i></i></span><span class="lbl">Switches</span><span class="st on" data-st>on</span></label>
           <label class="flag"><span class="sw"><input type="checkbox" checked data-flag="Snyk · SonarQube — SAST + SCA holding the line"><i></i></span><span class="lbl">Valves</span><span class="st on" data-st>on</span></label>
         </div>
+        <p class="hand-hint">Cut all three, then bring the grid back online — it should come up with no downtime.</p>
         <p class="hand-hint" id="flagline" aria-live="polite">All three on — the grid hums along.</p>
+        <div class="toyfoot" hidden><span class="stamp">restored</span><p class="toy-result">Lights back on, zero downtime — the way the React 18/19 migration shipped.</p></div>
       </div>
       <div class="chips">
         <span class="chip" data-anim style="--i:0"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13/icons/react.svg" alt="" loading="lazy" onerror="this.remove()">React 18/19</span>
@@ -378,6 +454,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <textarea id="rvin" spellcheck="false">const total = items.reduce((a,i) => a + i.price * i.qty, 0);</textarea>
         <button type="button" class="run" id="rvrun">Run review</button>
         <pre id="rvout" aria-live="polite">— the assistant's structured verdict appears here.</pre>
+        <p class="hand-hint">Run it on your own line — the findings read what you paste.</p>
+        <div class="toyfoot" hidden><span class="stamp">reviewed</span><p class="toy-result">The machine answers back — structured verdicts, any provider, no key required.</p></div>
       </div>
       <p data-anim style="--i:4">The live demo is up: <a href="https://vuquangkhtn.github.io/ai-code-review-assistant/">vuquangkhtn.github.io/ai-code-review-assistant</a>.</p>
     </div>
@@ -447,17 +525,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var io=new IntersectionObserver(function(es){
     es.forEach(function(e){
       if(e.isIntersecting){
-        e.target.classList.add('in');
+        e.target.classList.add('in');   /* plays once; later passes see the settled page */
         [].slice.call(e.target.querySelectorAll('.count')).forEach(countUp);
         var acc=e.target.getAttribute('data-accent');
         if(acc)document.documentElement.style.setProperty('--accent',acc);
-      } else {
-        e.target.classList.remove('in');   /* re-arms: scroll back = it plays again */
-        [].slice.call(e.target.querySelectorAll('.count')).forEach(function(el){countsDone.delete(el)});
       }
     });
   },{threshold:.22});
   secs.forEach(function(s){io.observe(s)});
+  [].slice.call(document.querySelectorAll('.col.drawn')).forEach(function(s){io.observe(s)});
 
   /* progress rail */
   var fill=document.querySelector('#rail i'), ticking=false;
@@ -469,72 +545,192 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(rail)}},{passive:true});
   rail();
 
-  /* I — weave grid */
-  var weave=document.querySelector('.weave');
-  if(weave){
-    for(var i=0;i<32;i++){
-      var b=document.createElement('button');
-      b.type='button';b.setAttribute('aria-pressed','false');
-      b.setAttribute('aria-label','Thread tile '+(i+1));
-      b.addEventListener('click',function(){
-        var on=this.getAttribute('aria-pressed')==='true';
-        this.setAttribute('aria-pressed',on?'false':'true');
+  /* completion — a machine's task done earns its stamp, and one earned celebration */
+  function completeToy(toy,msg,kind){
+    if(!toy||toy.classList.contains('done'))return;
+    toy.classList.add('done');
+    var f=toy.querySelector('.toyfoot');
+    if(f){f.hidden=false;void f.offsetWidth}
+    if(kind)celebrate(toy,kind);
+    var an=document.getElementById('announcer');
+    if(an)an.textContent=msg;
+  }
+  function celebrate(toy,kind){
+    var old=toy.querySelector('.cheer');if(old)old.remove();
+    toy.classList.add('cheer-'+kind);
+    var layer=document.createElement('div');
+    layer.className='cheer';layer.setAttribute('aria-hidden','true');
+    var i,d;
+    if(kind==='seal'){
+      var s=document.createElement('span');s.className='seal';
+      s.innerHTML='<b>8.3</b><i>pattern held</i>';
+      layer.appendChild(s);
+      if(!RM)[].slice.call(toy.querySelectorAll('.weave button')).forEach(function(t){
+        var delay=(+t.getAttribute('data-r')+ +t.getAttribute('data-c'))*45+150;
+        setTimeout(function(){t.style.animation='none';void t.offsetWidth;t.style.animation='threadin .5s var(--spring) both'},delay);
       });
-      weave.appendChild(b);
+    }else if(kind==='thread'){
+      var tabsEl=toy.querySelector('.tabs');
+      var y=(tabsEl?tabsEl.offsetTop+tabsEl.offsetHeight+4:70);
+      var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('class','threadsvg');svg.setAttribute('viewBox','0 0 300 14');svg.setAttribute('preserveAspectRatio','none');
+      svg.style.top=y+'px';
+      var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('pathLength','1');
+      p.setAttribute('d','M2 8 q 12 -7 24 0 t 24 0 t 24 0 t 24 0 t 24 0 t 24 0 t 24 0 t 24 0 t 24 0 t 24 0 t 24 0 t 24 0');
+      svg.appendChild(p);layer.appendChild(svg);
+    }else if(kind==='confetti'){
+      var mtr=toy.querySelector('.meter'),tr=toy.getBoundingClientRect(),mr=mtr.getBoundingClientRect();
+      var x=mr.left-tr.left+mr.width*.9,ym=mr.top-tr.top+mr.height/2;
+      for(i=0;i<16;i++){
+        d=document.createElement('i');d.className='dash';
+        var ang=(-20-Math.random()*140)*Math.PI/180,dist=50+Math.random()*90;
+        d.style.left=x+'px';d.style.top=ym+'px';
+        d.style.setProperty('--dx',Math.cos(ang)*dist+'px');
+        d.style.setProperty('--dy',Math.sin(ang)*dist+'px');
+        d.style.setProperty('--dr',(Math.random()*300-150)+'deg');
+        d.style.setProperty('--d',(i*28)+'ms');
+        if(i%4===0)d.style.background='var(--sun)';
+        if(i%4===2)d.style.background='var(--turq)';
+        layer.appendChild(d);
+      }
+    }else if(kind==='lights'){
+      var wire=document.createElement('i');wire.className='wire';layer.appendChild(wire);
+      for(i=0;i<12;i++){d=document.createElement('i');d.className='bulb';d.style.setProperty('--i',i);layer.appendChild(d)}
+    }else if(kind==='stamp'){
+      var sl=document.createElement('span');sl.className='shipline';sl.textContent='SHIP IT';
+      layer.appendChild(sl);
     }
+    toy.appendChild(layer);
   }
 
-  /* II — bench tabs */
+  /* I — weave grid: fill a row to raise a stripe; four stripes close the pattern */
+  var weave=document.querySelector('.weave');
+  if(weave){
+    var weaveToy=weave.closest('.toy'),unpick=document.getElementById('unpick');
+    var ROWS=4,COLS=8,tiles=[],stripes=0;
+    for(var r=0;r<ROWS;r++){
+      tiles.push([]);
+      for(var c=0;c<COLS;c++){
+        var b=document.createElement('button');
+        b.type='button';b.setAttribute('aria-pressed','false');
+        b.setAttribute('data-r',r);b.setAttribute('data-c',c);
+        b.setAttribute('aria-label','Thread tile, row '+(r+1)+', column '+(c+1));
+        (function(r,c,b){
+          b.addEventListener('click',function(){
+            if(b.disabled)return;
+            b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');
+            var row=tiles[r];
+            if(row.every(function(x){return x.getAttribute('aria-pressed')==='true'})){
+              stripes++;
+              row.forEach(function(x,ci){
+                x.disabled=true;
+                if(!RM){x.style.animation='none';void x.offsetWidth;x.style.animation='threadin .45s var(--spring) '+(ci*40)+'ms both'}
+              });
+              var an=document.getElementById('announcer');
+              if(an)an.textContent='Stripe '+stripes+' of 4 woven';
+              if(stripes===ROWS){
+                completeToy(weaveToy,'Pattern complete — four stripes woven, the cloth holds.','seal');
+                unpick.hidden=false;
+              }
+            }
+          });
+        })(r,c,b);
+        tiles[r].push(b);
+        weave.appendChild(b);
+      }
+    }
+    unpick&&unpick.addEventListener('click',function(){
+      stripes=0;
+      tiles.forEach(function(row){row.forEach(function(x){x.disabled=false;x.setAttribute('aria-pressed','false');x.style.animation=''})});
+      weaveToy.classList.remove('done','cheer-seal');
+      var ch=weaveToy.querySelector('.cheer');if(ch)ch.remove();
+      var f=weaveToy.querySelector('.toyfoot');if(f)f.hidden=true;
+      unpick.hidden=true;
+    });
+  }
+
+  /* II — bench tabs: both benches served closes the apprenticeship */
   var tabs=[].slice.call(document.querySelectorAll('.tabs button'));
+  var benchToy=document.querySelector('#benches .toy'),seenBenches={vng:true};
   tabs.forEach(function(t){
     t.addEventListener('click',function(){
       tabs.forEach(function(o){o.setAttribute('aria-pressed','false')});
       t.setAttribute('aria-pressed','true');
       var which=t.getAttribute('data-bench');
+      seenBenches[which]=true;
       [].slice.call(document.querySelectorAll('#bench-words [data-b]')).forEach(function(r){
         r.hidden=r.getAttribute('data-b')!==which;
-        if(!r.hidden&&!RM){r.style.animation='none';void r.offsetWidth;r.style.animation='thunk .6s var(--spring) '+(r.getAttribute('data-b')===which?'':'')+(Array.prototype.indexOf.call(r.parentNode.children,r)*70)+'ms both'}
+        if(!r.hidden&&!RM){r.style.animation='none';void r.offsetWidth;r.style.animation='thunk .6s var(--spring) '+(Array.prototype.indexOf.call(r.parentNode.children,r)*70)+'ms both'}
       });
       document.getElementById('announcer').textContent=which==='vng'?'VNG bench, mobile years':'KMS bench, web year';
+      if(seenBenches.vng&&seenBenches.kms)completeToy(benchToy,'Both benches served.','thread');
     });
   });
 
-  /* III — coverage slider */
+  /* III — coverage slider: drag up past the mark the medical platform held */
   var cov=document.getElementById('cov'),covout=document.getElementById('covout'),covfill=document.getElementById('covfill');
-  if(cov){cov.addEventListener('input',function(){
-    covout.textContent=cov.value+'%';
-    covfill.style.width=cov.value+'%';
-  });covfill.style.width='90%';}
+  if(cov){
+    var covToy=cov.closest('.toy');
+    cov.addEventListener('input',function(){
+      covout.textContent=cov.value+'%';
+      covfill.style.width=cov.value+'%';
+      if(+cov.value>=90)completeToy(covToy,'Bar met — ninety percent and holding.','confetti');
+    });
+    covfill.style.width='40%';
+  }
 
-  /* IV — flag switches */
-  var flagline=document.getElementById('flagline');
+  /* IV — flag switches: cut all three, restore all three — no downtime */
+  var flagline=document.getElementById('flagline'),flagsToy=flagline&&flagline.closest('.toy'),flagsWereDark=false;
   [].slice.call(document.querySelectorAll('[data-flag]')).forEach(function(sw){
     sw.addEventListener('change',function(){
       var st=sw.closest('.flag').querySelector('[data-st]');
       var on=sw.checked;
       st.textContent=on?'on':'off';st.classList.toggle('on',on);
-      var onFlags=[].slice.call(document.querySelectorAll('[data-flag]:checked')).map(function(x){return x.getAttribute('data-flag').split(' — ')[0]});
-      flagline.textContent=onFlags.length===3?'All three on — the grid hums along.':
+      var all=document.querySelectorAll('[data-flag]'),onAll=document.querySelectorAll('[data-flag]:checked');
+      if(onAll.length===0)flagsWereDark=true;
+      if(flagsWereDark&&onAll.length===all.length)completeToy(flagsToy,'Grid restored — zero downtime.','lights');
+      var onFlags=[].slice.call(onAll).map(function(x){return x.getAttribute('data-flag').split(' — ')[0]});
+      flagline.textContent=onFlags.length===all.length?'All three on — the grid hums along.':
         onFlags.length===0?'All off — even the grid needs a dark night.':
         'Live: '+onFlags.join(' · ')+'.';
     });
   });
 
-  /* V — review playground (typewriter; instant under RM) */
+  /* V — review playground: the findings read the code you paste (typewriter; instant under RM) */
   var rvrun=document.getElementById('rvrun'),rvin=document.getElementById('rvin'),rvout=document.getElementById('rvout');
-  var VERDICT=[
-    ['REVIEW','style'],
+  var rvToy=rvrun&&rvrun.closest('.toy');
+  var DEFAULT=[
     ['finding 1','the reducer accumulates silently — name it, or reduce into a labelled shape'],
-    ['finding 2','i.price * i.qty — extract lineTotal(items[i]); the unit a finance team will ask about'],
     ['praise','reduce is the right tool here; no mutation, single pass'],
-    ['verdict','ship it — after the naming']
+    ['finding 2','i.price * i.qty — extract lineTotal(items[i]); the unit a finance team will ask about']
   ];
+  function findingsFor(src){
+    var out=[];
+    if(/\bvar\s+[A-Za-z_$]/.test(src))out.push('var declared — let or const keeps scope honest');
+    if(/[^=!<>]==[^=]/.test(src))out.push('loose == — prefer === so types never quietly coerce');
+    if(/console\.log\s*\(/.test(src))out.push('console.log left in — debug output off the bench before it ships');
+    if(/\.then\s*\(/.test(src)&&!/catch/.test(src))out.push('a promise with no catch — one rejection stops the run');
+    if(/await\s/.test(src)&&!/try\b/.test(src))out.push('await outside try/catch — wrap it or wear the crash');
+    return out;
+  }
   function verdictText(src){
-    return 'REVIEW · '+(''+(src||'').trim().split('\n').length)+' line(s) under review\n\n'+
-      VERDICT.map(function(v){return v[0].toUpperCase()+'  ·  '+v[1]}).join('\n')+'\n\n— provider-agnostic · no key required';
+    var s=(''+(src||'')).trim();
+    if(!s)return 'REVIEW · 0 line(s) under review\n\nthe bench is empty — paste a line and run it again.\n\n— provider-agnostic · no key required';
+    var found=findingsFor(s),verdict;
+    var lines;
+    if(found.length){
+      lines=found.map(function(t,i){return 'FINDING '+(i+1)+'  ·  '+t});
+      verdict='ship it — once the findings above are cleared';
+    }else{
+      lines=DEFAULT.map(function(v){return v[0].toUpperCase()+'  ·  '+v[1]});
+      verdict='ship it — after the naming';
+    }
+    return 'REVIEW · '+s.split('\n').length+' line(s) under review\n\n'+lines.join('\n')+'\n\nVERDICT  ·  '+verdict+'\n\n— provider-agnostic · no key required';
   }
   rvrun&&rvrun.addEventListener('click',function(){
     var text=verdictText(rvin.value);
+    completeToy(rvToy,'Review complete — the machine answers back.','stamp');
     if(RM){rvout.textContent=text;return}
     rvout.textContent='';var i=0;
     var iv=setInterval(function(){
